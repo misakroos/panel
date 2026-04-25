@@ -8,7 +8,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <style>
     body { font-family: system-ui, sans-serif; }
-    th, td { padding: 12px 10px; }
+    th, td { padding: 12px 10px; text-align: left; }
     tr:hover { background-color: #f8fafc; }
     .vencido { color: #dc2626; font-weight: 700; }
     .por-vencer { color: #d97706; font-weight: 700; }
@@ -20,14 +20,22 @@
   <h1 class="text-4xl font-bold text-gray-900 mb-2">📊 MISAKROOS Panel</h1>
   <p id="status" class="text-green-600 mb-6 font-medium"></p>
 
+  <!-- KPIs -->
   <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8" id="kpis"></div>
 
+  <!-- Filtros -->
   <div class="bg-white p-5 rounded-2xl shadow mb-6 flex flex-wrap gap-4">
-    <input type="text" id="search" placeholder="🔎 Buscar nombre o teléfono..." class="flex-1 px-5 py-3 border rounded-xl focus:outline-none focus:border-blue-500">
-    <select id="filterEstado" class="px-5 py-3 border rounded-xl"><option value="">Todos los estados</option></select>
-    <select id="filterServicio" class="px-5 py-3 border rounded-xl"><option value="">Todos los servicios</option></select>
+    <input type="text" id="search" placeholder="🔎 Buscar nombre o teléfono..." 
+           class="flex-1 px-5 py-3 border rounded-xl focus:outline-none focus:border-blue-500">
+    <select id="filterEstado" class="px-5 py-3 border rounded-xl">
+      <option value="">Todos los estados</option>
+    </select>
+    <select id="filterServicio" class="px-5 py-3 border rounded-xl">
+      <option value="">Todos los servicios</option>
+    </select>
   </div>
 
+  <!-- Tabla -->
   <div class="bg-white rounded-2xl shadow overflow-x-auto">
     <table class="w-full">
       <thead class="bg-gray-800 text-white">
@@ -54,11 +62,17 @@
   async function cargarDatos() {
     const status = document.getElementById('status');
     status.textContent = '🔄 Cargando datos...';
+
     try {
       const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=Tabla_1`;
       const res = await fetch(url);
       const text = await res.text();
-      const json = JSON.parse(text.substring(text.indexOf('{'), text.lastIndexOf('}') + 1));
+
+      // Parseo más seguro
+      const start = text.indexOf('{');
+      const end = text.lastIndexOf('}') + 1;
+      const jsonStr = text.substring(start, end);
+      const json = JSON.parse(jsonStr);
 
       datos = json.table.rows.map(row => {
         const c = row.c || [];
@@ -71,12 +85,13 @@
           estado: c[7]?.v || '',
           dias: parseInt(c[10]?.v) || 0
         };
-      }).filter(r => r.nombre);
+      }).filter(r => r.nombre && r.nombre.trim() !== '');
 
-      status.innerHTML = `✅ ${datos.length} clientes cargados`;
+      status.innerHTML = `✅ ${datos.length} clientes cargados correctamente`;
       renderizar();
     } catch (e) {
-      status.innerHTML = '❌ Error al cargar datos';
+      console.error(e);
+      status.innerHTML = `❌ Error al cargar.<br>Intentá refrescar (F5) o avisame.`;
     }
   }
 
@@ -86,7 +101,9 @@
     const servicioFiltro = document.getElementById('filterServicio').value;
 
     const filtrados = datos.filter(r => {
-      const busca = !search || r.nombre.toLowerCase().includes(search) || String(r.telefono).includes(search);
+      const busca = !search || 
+        r.nombre.toLowerCase().includes(search) || 
+        String(r.telefono).includes(search);
       const est = !estadoFiltro || r.estado === estadoFiltro;
       const serv = !servicioFiltro || r.servicio === servicioFiltro;
       return busca && est && serv;
@@ -99,40 +116,63 @@
     const vencidos = filtrados.filter(r => r.dias <= 0).length;
 
     document.getElementById('kpis').innerHTML = `
-      <div class="bg-white p-6 rounded-2xl shadow text-center"><p class="text-sm text-gray-500">Total</p><p class="text-4xl font-bold">${total}</p></div>
-      <div class="bg-white p-6 rounded-2xl shadow text-center"><p class="text-sm text-green-600">Activos</p><p class="text-4xl font-bold text-green-600">${activos}</p></div>
-      <div class="bg-white p-6 rounded-2xl shadow text-center"><p class="text-sm text-orange-600">Por vencer</p><p class="text-4xl font-bold text-orange-600">${porVencer}</p></div>
-      <div class="bg-white p-6 rounded-2xl shadow text-center"><p class="text-sm text-red-600">Vencidos</p><p class="text-4xl font-bold text-red-600">${vencidos}</p></div>
+      <div class="bg-white p-6 rounded-2xl shadow text-center">
+        <p class="text-sm text-gray-500">Total</p>
+        <p class="text-4xl font-bold">${total}</p>
+      </div>
+      <div class="bg-white p-6 rounded-2xl shadow text-center">
+        <p class="text-sm text-green-600">Activos</p>
+        <p class="text-4xl font-bold text-green-600">${activos}</p>
+      </div>
+      <div class="bg-white p-6 rounded-2xl shadow text-center">
+        <p class="text-sm text-orange-600">Por vencer (7d)</p>
+        <p class="text-4xl font-bold text-orange-600">${porVencer}</p>
+      </div>
+      <div class="bg-white p-6 rounded-2xl shadow text-center">
+        <p class="text-sm text-red-600">Vencidos</p>
+        <p class="text-4xl font-bold text-red-600">${vencidos}</p>
+      </div>
     `;
 
-    // Filtros
+    // Filtro servicios
     const servicios = [...new Set(datos.map(r => r.servicio).filter(Boolean))].sort();
     const sel = document.getElementById('filterServicio');
-    if (sel.options.length < 3) servicios.forEach(s => sel.add(new Option(s, s)));
+    if (sel.options.length < 3) {
+      servicios.forEach(s => sel.add(new Option(s, s)));
+    }
 
     // Tabla
     let html = '';
     filtrados.forEach(r => {
       const clase = r.dias <= 0 ? 'vencido' : (r.dias <= 7 ? 'por-vencer' : '');
-      html += `<tr class="hover:bg-gray-50">
-        <td class="p-4">${r.id}</td>
-        <td class="p-4 font-medium">${r.nombre}</td>
-        <td class="p-4">${r.telefono}</td>
-        <td class="p-4">${r.servicio}</td>
-        <td class="p-4">${r.vencimiento}</td>
-        <td class="p-4 text-center ${clase}">${r.dias}</td>
-        <td class="p-4 text-center"><span class="px-4 py-1 rounded-full text-xs ${r.estado==='Activo'?'bg-green-100 text-green-700':'bg-orange-100 text-orange-700'}">${r.estado}</span></td>
-        <td class="p-4 text-center">${r.telefono ? `<a href="https://wa.me/${r.telefono.replace(/\D/g,'')}" target="_blank" class="text-3xl">💬</a>` : ''}</td>
-      </tr>`;
+      html += `
+        <tr class="hover:bg-gray-50">
+          <td class="p-4">${r.id}</td>
+          <td class="p-4 font-medium">${r.nombre}</td>
+          <td class="p-4">${r.telefono || ''}</td>
+          <td class="p-4">${r.servicio || ''}</td>
+          <td class="p-4">${r.vencimiento || ''}</td>
+          <td class="p-4 text-center ${clase}">${r.dias}</td>
+          <td class="p-4 text-center">
+            <span class="px-4 py-1 rounded-full text-xs font-medium ${r.estado === 'Activo' ? 'bg-green-100 text-green-700' : 'bg-orange-100 text-orange-700'}">
+              ${r.estado}
+            </span>
+          </td>
+          <td class="p-4 text-center">
+            ${r.telefono ? `<a href="https://wa.me/${r.telefono.replace(/\D/g,'')}" target="_blank" class="text-3xl hover:scale-110">💬</a>` : ''}
+          </td>
+        </tr>`;
     });
 
-    document.getElementById('tablaBody').innerHTML = html || `<tr><td colspan="8" class="p-12 text-center text-gray-400">Sin resultados</td></tr>`;
+    document.getElementById('tablaBody').innerHTML = html || `<tr><td colspan="8" class="p-12 text-center text-gray-400">No se encontraron resultados</td></tr>`;
   }
 
+  // Eventos
   document.getElementById('search').addEventListener('input', renderizar);
   document.getElementById('filterEstado').addEventListener('change', renderizar);
   document.getElementById('filterServicio').addEventListener('change', renderizar);
 
+  // Carga
   cargarDatos();
   setInterval(cargarDatos, 30000);
 </script>
