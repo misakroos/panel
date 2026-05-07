@@ -1,262 +1,640 @@
 <!DOCTYPE html>
-
 <html lang="es">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MISAKROOS</title>
-<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,700;12..96,800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<title>MISAKROOS · Tienda Digital</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#09090f;--s1:#0e0e18;--s2:#13131f;--s3:#18182a;--s4:#1e1e30;--bo:#272740;--bo2:#33334d;--ac:#7c3aed;--ac2:#06b6d4;--gr:#10b981;--ye:#f59e0b;--re:#ef4444;--wa:#25d366;--tx:#eeeeff;--mu:#6b7280;--mu2:#9ca3af;--fn:'Bricolage Grotesque',sans-serif;--mo:'JetBrains Mono',monospace;--r:14px;--sp:#3ecf8e;--gs:#34a853}
+:root{
+  --bg:#080810;--s1:#0d0d1a;--s2:#111120;--s3:#16162a;--s4:#1c1c32;
+  --bo:#252540;--bo2:#303055;
+  --red:#e8192c;--red2:#ff3547;--redg:rgba(232,25,44,0.12);
+  --ac:#7c3aed;--ac2:#06b6d4;
+  --gr:#10b981;--ye:#f59e0b;--wa:#25d366;
+  --gold:#d4af37;--extra:#f5a623;
+  --tx:#f0f0ff;--mu:#6b6b90;--mu2:#9898b8;
+  --fn:'Syne',sans-serif;--mo:'DM Mono',monospace;
+  --r:14px;
+}
 *{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
 body{font-family:var(--fn);background:var(--bg);color:var(--tx);min-height:100vh;overflow-x:hidden}
-.topbar{display:flex;align-items:center;justify-content:space-between;padding:11px 14px;background:var(--s1);border-bottom:1px solid var(--bo);position:sticky;top:0;z-index:100;gap:8px}
-.logo{font-size:1.05rem;font-weight:800;cursor:pointer;background:linear-gradient(135deg,var(--ac),var(--ac2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;white-space:nowrap}
-.tr{display:flex;gap:5px;align-items:center}
-.tb{padding:6px 11px;border-radius:8px;font-family:var(--fn);font-size:0.73rem;font-weight:700;cursor:pointer;border:1px solid var(--bo2);background:var(--s3);color:var(--mu2);transition:all .18s;white-space:nowrap}
-.tb:hover{border-color:var(--ac2);color:var(--ac2)}
-.tb.adm{border-color:var(--ac);color:var(--ac);background:#7c3aed15}
-.tb.adm:hover{background:var(--ac);color:#fff}
-.pill{display:flex;align-items:center;gap:5px;padding:4px 9px;border-radius:99px;font-size:0.63rem;font-weight:700;font-family:var(--mo);border:1px solid;cursor:pointer;white-space:nowrap}
-.pill.none{color:var(--re);border-color:var(--re);background:#ef444410}
-.pill.sp{color:var(--sp);border-color:var(--sp);background:#3ecf8e10}
-.pill.gs{color:var(--gs);border-color:var(--gs);background:#34a85310}
+
+/* ─── SCROLLBAR ─── */
+::-webkit-scrollbar{width:4px;height:4px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--bo2);border-radius:99px}
+
+/* ─── TOPBAR ─── */
+.topbar{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:12px 16px;
+  background:rgba(8,8,16,0.9);
+  border-bottom:1px solid var(--bo);
+  position:sticky;top:0;z-index:200;
+  backdrop-filter:blur(12px);
+  gap:10px;
+}
+.logo{
+  font-size:1.1rem;font-weight:800;letter-spacing:-0.3px;
+  background:linear-gradient(135deg,var(--red),#ff6b6b);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  cursor:pointer;white-space:nowrap;
+  display:flex;flex-direction:column;line-height:1;
+}
+.logo-sub{font-size:0.55rem;font-weight:600;letter-spacing:0.18em;text-transform:uppercase;color:var(--mu2);-webkit-text-fill-color:var(--mu2);margin-top:2px;}
+.nav{display:flex;gap:5px;align-items:center}
+.nav-btn{
+  padding:7px 13px;border-radius:8px;
+  font-family:var(--fn);font-size:0.72rem;font-weight:700;
+  cursor:pointer;border:1px solid var(--bo2);
+  background:var(--s3);color:var(--mu2);
+  transition:all .18s;white-space:nowrap;
+}
+.nav-btn:hover{border-color:var(--ac2);color:var(--ac2)}
+.nav-btn.active{background:var(--red);border-color:var(--red);color:#fff}
+.nav-btn.panel-btn{border-color:var(--ac);color:var(--ac);background:#7c3aed12}
+.nav-btn.panel-btn:hover,.nav-btn.panel-btn.active{background:var(--ac);color:#fff;border-color:var(--ac)}
+.pill{display:flex;align-items:center;gap:5px;padding:4px 9px;border-radius:99px;font-size:0.62rem;font-weight:700;font-family:var(--mo);border:1px solid;cursor:pointer;white-space:nowrap}
+.pill.none{color:var(--red);border-color:var(--red);background:#e8192c10}
+.pill.sp{color:var(--gr);border-color:var(--gr);background:#10b98110}
+.pill.gs{color:#34a853;border-color:#34a853;background:#34a85310}
 .pdot{width:6px;height:6px;border-radius:50%;background:currentColor}
-.tabs{display:flex;gap:2px;padding:9px 12px 0;background:var(--s1);border-bottom:1px solid var(--bo);overflow-x:auto;scrollbar-width:none}
-.tabs::-webkit-scrollbar{display:none}
-.tab{padding:7px 13px;border-radius:8px 8px 0 0;font-size:0.72rem;font-weight:700;cursor:pointer;border:1px solid transparent;border-bottom:none;white-space:nowrap;transition:all .18s;color:var(--mu);background:transparent}
-.tab.on{color:var(--tx);background:var(--bg);border-color:var(--bo)}
-.tn{display:inline-block;margin-left:5px;background:var(--s4);padding:1px 6px;border-radius:99px;font-size:0.63rem;font-family:var(--mo)}
-.tab.on .tn{background:var(--ac);color:#fff}
-.main{padding:13px;max-width:500px;margin:0 auto}
-.sb{display:flex;gap:7px;margin-bottom:13px}
-.sb input{flex:1;background:var(--s2);border:1px solid var(--bo);border-radius:10px;padding:9px 12px;color:var(--tx);font-family:var(--fn);font-size:0.82rem;outline:none;transition:border-color .2s}
+
+/* ─── VIEWS ─── */
+#vLanding{display:block}
+
+
+/* ════════════════════════════════
+   LANDING / TIENDA
+════════════════════════════════ */
+.landing{
+  min-height:calc(100vh - 57px);
+  padding:48px 16px 80px;
+  max-width:640px;
+  margin:0 auto;
+  display:flex;flex-direction:column;align-items:center;
+  gap:36px;
+  position:relative;
+}
+
+/* bg glow */
+.landing::before{
+  content:'';position:fixed;top:-10%;left:50%;transform:translateX(-50%);
+  width:70vw;height:40vh;
+  background:radial-gradient(ellipse,rgba(232,25,44,0.15) 0%,transparent 70%);
+  pointer-events:none;z-index:0;
+}
+
+.hero{text-align:center;position:relative;z-index:1}
+.hero-brand{
+  font-size:clamp(38px,9vw,64px);font-weight:800;
+  background:linear-gradient(135deg,var(--red),#ff6b6b 60%,#ffaaaa);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  letter-spacing:-1px;line-height:1;margin-bottom:8px;
+}
+.hero-tag{
+  display:inline-flex;align-items:center;gap:6px;
+  font-size:0.65rem;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;
+  color:var(--mu2);border:1px solid var(--bo2);padding:4px 14px;border-radius:99px;
+  margin-bottom:20px;
+}
+.hero-q{
+  font-size:clamp(18px,4.5vw,28px);font-weight:800;
+  line-height:1.25;color:var(--tx);
+}
+.hero-q span{color:var(--red)}
+
+/* STEP */
+.step{width:100%;position:relative;z-index:1}
+.step-label{
+  font-size:0.62rem;font-weight:700;letter-spacing:0.18em;
+  text-transform:uppercase;color:var(--mu);
+  margin-bottom:12px;display:flex;align-items:center;gap:6px;
+}
+.step-label strong{color:var(--red)}
+.step-label::after{content:'';flex:1;height:1px;background:var(--bo)}
+
+/* COUNTRY CARDS */
+.country-row{display:flex;gap:12px}
+.ccard{
+  flex:1;background:var(--s2);border:2px solid var(--bo);
+  border-radius:12px;padding:18px 12px;cursor:pointer;
+  transition:all .2s;display:flex;flex-direction:column;
+  align-items:center;gap:6px;font-family:var(--fn);color:var(--tx);
+}
+.ccard:hover{border-color:var(--red);transform:translateY(-3px);box-shadow:0 8px 28px rgba(232,25,44,0.2)}
+.ccard.sel{border-color:var(--red);background:var(--redg)}
+.ccard-flag{font-size:32px}
+.ccard-name{font-size:0.95rem;font-weight:700}
+.ccard-cur{font-size:0.68rem;color:var(--mu2);font-family:var(--mo)}
+
+/* OPCIONES */
+#step2{
+  opacity:0;pointer-events:none;transform:translateY(14px);
+  transition:opacity .3s ease,transform .3s ease;
+  width:100%;position:relative;z-index:1;
+}
+#step2.vis{opacity:1;pointer-events:all;transform:translateY(0)}
+
+.opts{display:flex;flex-direction:column;gap:12px}
+
+.ocard{
+  background:var(--s2);border:2px solid var(--bo);
+  border-radius:14px;overflow:hidden;
+  transition:transform .2s,box-shadow .2s;
+}
+.ocard:hover{transform:translateY(-2px)}
+.ocard.priv {border-left:4px solid var(--red)}
+.ocard.extra{border-left:4px solid var(--extra)}
+.ocard.full {border-left:4px solid var(--gold)}
+.ocard:hover.priv {box-shadow:0 8px 32px rgba(232,25,44,0.18)}
+.ocard:hover.extra{box-shadow:0 8px 32px rgba(245,166,35,0.18)}
+.ocard:hover.full {box-shadow:0 8px 32px rgba(212,175,55,0.18)}
+
+.ocard-body{display:flex;align-items:flex-start;gap:12px;padding:16px 16px 10px}
+.ocard-icon{
+  font-size:22px;flex-shrink:0;width:46px;height:46px;
+  border-radius:10px;background:rgba(255,255,255,0.05);
+  display:flex;align-items:center;justify-content:center;
+}
+.ocard-info{flex:1}
+.ocard-tag{font-size:0.6rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--mu);margin-bottom:3px}
+.ocard-name{font-size:1rem;font-weight:800;margin-bottom:7px}
+.priv  .ocard-name{color:#ff6b6b}
+.extra .ocard-name{color:var(--extra)}
+.full  .ocard-name{color:var(--gold)}
+
+.bullets{display:flex;flex-direction:column;gap:3px}
+.bullet{font-size:0.75rem;color:var(--mu2);display:flex;align-items:flex-start;gap:6px;line-height:1.45}
+.bdot{flex-shrink:0;margin-top:4px;width:5px;height:5px;border-radius:50%}
+.priv  .bdot{background:var(--red)}
+.extra .bdot{background:var(--extra)}
+.full  .bdot{background:var(--gold)}
+
+.ocard-price{flex-shrink:0;text-align:right;display:flex;flex-direction:column;align-items:flex-end}
+.price-val{font-size:1.35rem;font-weight:800;line-height:1;display:none;font-family:var(--mo)}
+.price-val.show{display:block}
+.priv  .price-val{color:#ff6b6b}
+.extra .price-val{color:var(--extra)}
+.full  .price-val{color:var(--gold)}
+.price-unit{font-style:normal;font-size:0.6rem;font-weight:500;color:var(--mu);display:block;margin-top:2px;text-align:right;font-family:var(--fn)}
+
+.ocard-cta{padding:0 16px 14px}
+.btn-opt{
+  display:flex;align-items:center;justify-content:center;gap:7px;
+  width:100%;padding:11px;border-radius:8px;border:none;
+  font-family:var(--fn);font-size:0.8rem;font-weight:700;
+  cursor:pointer;text-decoration:none;
+  transition:transform .18s,filter .18s;
+}
+.btn-opt:hover{transform:translateY(-1px);filter:brightness(1.1)}
+.btn-priv {background:var(--red);color:#fff;box-shadow:0 4px 18px rgba(232,25,44,0.35)}
+.btn-extra{background:var(--extra);color:#000;box-shadow:0 4px 18px rgba(245,166,35,0.3)}
+.btn-full {background:var(--gold);color:#000;box-shadow:0 4px 18px rgba(212,175,55,0.3)}
+.wa-svg{width:15px;height:15px;flex-shrink:0}
+
+.hint{font-size:0.7rem;color:var(--mu);text-align:center;position:relative;z-index:1}
+
+/* ════════════════════════════════
+   PANEL DE GESTIÓN
+════════════════════════════════ */
+.panel-wrap{max-width:500px;margin:0 auto}
+
+/* tabs */
+.ptabs{
+  display:flex;gap:2px;padding:9px 12px 0;
+  background:var(--s1);border-bottom:1px solid var(--bo);
+  overflow-x:auto;scrollbar-width:none;
+}
+.ptabs::-webkit-scrollbar{display:none}
+.ptab{
+  padding:7px 13px;border-radius:8px 8px 0 0;
+  font-size:0.72rem;font-weight:700;cursor:pointer;
+  border:1px solid transparent;border-bottom:none;
+  white-space:nowrap;transition:all .18s;
+  color:var(--mu);background:transparent;
+}
+.ptab.on{color:var(--tx);background:var(--bg);border-color:var(--bo)}
+.tn{
+  display:inline-block;margin-left:5px;
+  background:var(--s4);padding:1px 6px;border-radius:99px;
+  font-size:0.62rem;font-family:var(--mo);
+}
+.ptab.on .tn{background:var(--red);color:#fff}
+
+.pmain{padding:12px}
+
+/* search */
+.sb{display:flex;gap:7px;margin-bottom:12px}
+.sb input{
+  flex:1;background:var(--s2);border:1px solid var(--bo);border-radius:10px;
+  padding:9px 12px;color:var(--tx);font-family:var(--fn);font-size:0.82rem;
+  outline:none;transition:border-color .2s;
+}
 .sb input:focus{border-color:var(--ac)}
-.rbtn{background:var(--s2);border:1px solid var(--bo);border-radius:10px;color:var(--mu);font-size:1rem;padding:0 11px;cursor:pointer;transition:all .18s}
+.sb input::placeholder{color:var(--mu)}
+.rbtn{
+  background:var(--s2);border:1px solid var(--bo);border-radius:10px;
+  color:var(--mu);font-size:1rem;padding:0 11px;cursor:pointer;
+  transition:all .18s;
+}
 .rbtn:hover{border-color:var(--ac2);color:var(--ac2)}
-.sp0{animation:sp0 .5s ease}
-@keyframes sp0{to{transform:rotate(360deg)}}
-.card{background:var(--s2);border:1px solid var(--bo);border-radius:var(--r);padding:13px;margin-bottom:10px;transition:border-color .18s,transform .15s;border-left:3px solid var(--bo)}
+@keyframes spin{to{transform:rotate(360deg)}}
+.spin{animation:spin .5s ease}
+
+/* cards clientes */
+.card{
+  background:var(--s2);border:1px solid var(--bo);border-radius:var(--r);
+  padding:13px;margin-bottom:10px;
+  transition:border-color .18s,transform .15s;
+  border-left:3px solid var(--bo);
+}
 .card:hover{border-color:var(--bo2);transform:translateY(-1px)}
-.card.activo{border-left-color:var(--gr)}
+.card.activo {border-left-color:var(--gr)}
 .card.proximo{border-left-color:var(--ye)}
-.card.vencido{border-left-color:var(--re)}
-.badge{display:inline-flex;align-items:center;gap:4px;font-size:0.61rem;font-weight:700;letter-spacing:0.6px;padding:2px 9px;border-radius:99px;margin-bottom:9px}
+.card.vencido{border-left-color:var(--red)}
+
+.badge{display:inline-flex;align-items:center;gap:4px;font-size:0.61rem;font-weight:700;letter-spacing:0.6px;padding:2px 8px;border-radius:99px;margin-bottom:8px}
 .ba{background:#10b98115;color:var(--gr);border:1px solid #10b98140}
 .bp{background:#f59e0b15;color:var(--ye);border:1px solid #f59e0b40}
-.bv{background:#ef444415;color:var(--re);border:1px solid #ef444440}
-.ct{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:9px}
-.cn{font-size:0.96rem;font-weight:700;line-height:1.2}
+.bv{background:#e8192c15;color:var(--red);border:1px solid #e8192c40}
+
+.ct{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px}
+.cn{font-size:0.95rem;font-weight:700;line-height:1.2}
 .cs{font-size:0.67rem;color:var(--ac2);font-weight:600;margin-top:2px;font-family:var(--mo)}
-.ci{font-family:var(--mo);font-size:0.58rem;color:var(--mu);background:var(--s4);padding:2px 7px;border-radius:6px;flex-shrink:0}
-.cg{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:11px}
+.ci{font-family:var(--mo);font-size:0.57rem;color:var(--mu);background:var(--s4);padding:2px 7px;border-radius:6px;flex-shrink:0}
+
+.cg{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:10px}
 .cf{display:flex;flex-direction:column;gap:2px}
 .cfl{font-size:0.57rem;color:var(--mu);font-weight:700;letter-spacing:0.5px;text-transform:uppercase}
 .cfv{font-size:0.77rem;font-family:var(--mo);color:var(--tx);word-break:break-all;line-height:1.3}
-.cbtns{display:grid;grid-template-columns:1fr 1fr;gap:5px;border-top:1px solid var(--bo);padding-top:10px}
+
+.cbtns{display:grid;grid-template-columns:1fr 1fr;gap:5px;border-top:1px solid var(--bo);padding-top:9px}
 .cb{padding:7px 8px;border-radius:8px;font-size:0.69rem;font-family:var(--fn);font-weight:700;cursor:pointer;border:1px solid;display:flex;align-items:center;justify-content:center;gap:4px;transition:all .18s}
 .cb.re{background:#7c3aed12;color:var(--ac);border-color:#7c3aed50}.cb.re:hover{background:var(--ac);color:#fff;border-color:var(--ac)}
 .cb.wh{background:#25d36612;color:var(--wa);border-color:#25d36650}.cb.wh:hover{background:var(--wa);color:#fff;border-color:var(--wa)}
 .cb.ed{background:#06b6d412;color:var(--ac2);border-color:#06b6d450}.cb.ed:hover{background:var(--ac2);color:#fff;border-color:var(--ac2)}
-.cb.dl{background:#ef444412;color:var(--re);border-color:#ef444450}.cb.dl:hover{background:var(--re);color:#fff;border-color:var(--re)}
-.fab{position:fixed;bottom:22px;right:18px;width:54px;height:54px;border-radius:50%;background:linear-gradient(135deg,var(--ac),var(--ac2));color:#fff;font-size:1.5rem;border:none;cursor:pointer;box-shadow:0 6px 24px #7c3aed55;display:flex;align-items:center;justify-content:center;transition:transform .2s,box-shadow .2s;z-index:90}
+.cb.dl{background:#e8192c12;color:var(--red);border-color:#e8192c50}.cb.dl:hover{background:var(--red);color:#fff;border-color:var(--red)}
+
+/* FAB */
+.fab{
+  position:fixed;bottom:22px;right:18px;
+  width:52px;height:52px;border-radius:50%;
+  background:linear-gradient(135deg,var(--ac),var(--ac2));
+  color:#fff;font-size:1.5rem;border:none;
+  cursor:pointer;box-shadow:0 6px 24px #7c3aed55;
+  display:none;align-items:center;justify-content:center;
+  transition:transform .2s,box-shadow .2s;z-index:90;
+}
+.fab.show{display:flex}
 .fab:hover{transform:scale(1.08) rotate(90deg);box-shadow:0 10px 32px #7c3aed77}
-.ov{display:none;position:fixed;inset:0;background:#000b;backdrop-filter:blur(5px);z-index:200;align-items:flex-end;justify-content:center}
-.ov.open{display:flex}
-.ov.ctr{align-items:center}
-.modal{background:var(--s1);border:1px solid var(--bo2);border-radius:var(--r) var(--r) 0 0;padding:18px;width:100%;max-width:500px;max-height:92vh;overflow-y:auto;animation:su .22s ease}
-.modal.fl{border-radius:var(--r);width:calc(100% - 28px);max-width:390px;animation:sc .2s ease}
-@keyframes su{from{transform:translateY(30px);opacity:0}to{transform:translateY(0);opacity:1}}
-@keyframes sc{from{transform:scale(.93);opacity:0}to{transform:scale(1);opacity:1}}
-.mh{display:flex;align-items:center;justify-content:space-between;margin-bottom:15px}
-.mt{font-size:1.02rem;font-weight:800}
-.mc{background:var(--s4);border:none;color:var(--mu);font-size:1rem;width:28px;height:28px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .18s}
-.mc:hover{background:var(--re);color:#fff}
-.fg{margin-bottom:11px}
-.fl2{display:block;font-size:0.67rem;color:var(--mu);font-weight:700;letter-spacing:0.5px;text-transform:uppercase;margin-bottom:4px}
-.fi,.fse,.fta{width:100%;background:var(--s3);border:1px solid var(--bo);border-radius:9px;padding:9px 12px;color:var(--tx);font-family:var(--mo);font-size:0.81rem;outline:none;transition:border-color .2s}
-.fi:focus,.fse:focus,.fta:focus{border-color:var(--ac)}
-.fse{appearance:none;cursor:pointer}
-.fta{resize:vertical;min-height:70px;font-size:0.77rem}
-.fg2{display:grid;grid-template-columns:1fr 1fr;gap:9px}
-input[type=date]{color-scheme:dark}
-.sep{font-size:0.61rem;font-weight:700;color:var(--mu);letter-spacing:1px;text-transform:uppercase;display:flex;align-items:center;gap:8px;margin-bottom:11px}
-.sep::before,.sep::after{content:"";flex:1;height:1px;background:var(--bo)}
-.bsub{width:100%;padding:11px;border:none;border-radius:10px;color:#fff;font-family:var(--fn);font-size:0.87rem;font-weight:800;cursor:pointer;margin-top:6px;transition:opacity .2s}
-.bsub:hover{opacity:.85}
-.bsub.pu{background:linear-gradient(135deg,var(--ac),#5b21b6)}
-.bsub.sp{background:linear-gradient(135deg,var(--sp),#0ea5e9)}
-.bsub.gs{background:linear-gradient(135deg,var(--gs),#16a34a)}
-.ext{background:var(--s3);border:1px dashed var(--ac);border-radius:12px;padding:13px;margin-bottom:13px}
-.extt{font-size:0.67rem;font-weight:700;color:var(--ac2);letter-spacing:0.5px;margin-bottom:8px}
-.exta{width:100%;background:var(--bg);border:1px solid var(--bo);border-radius:8px;padding:9px;color:var(--tx);font-family:var(--mo);font-size:0.75rem;outline:none;resize:vertical;min-height:62px;margin-bottom:7px}
-.extb{width:100%;padding:8px;background:linear-gradient(135deg,var(--ac),var(--ac2));border:none;border-radius:8px;color:#fff;font-family:var(--fn);font-size:0.77rem;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:5px;transition:opacity .2s}
-.extb:hover{opacity:.85}.extb:disabled{opacity:.45;cursor:not-allowed}
-.aw{padding:13px;max-width:500px;margin:0 auto}
-.ah{display:flex;align-items:center;justify-content:space-between;margin-bottom:13px}
-.nc{background:var(--s2);border:1px solid var(--bo);border-radius:var(--r);overflow:hidden;margin-bottom:13px}
-.nh{background:linear-gradient(135deg,#b91c1c,#7f1d1d);padding:12px 14px;display:flex;align-items:center;justify-content:space-between}
-.nht{font-size:0.87rem;font-weight:800;color:#fff;display:flex;align-items:center;gap:7px}
+
+/* cuentas admin */
+.aw{padding:12px}
+.ah{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.nc{background:var(--s2);border:1px solid var(--bo);border-radius:var(--r);overflow:hidden;margin-bottom:12px}
+.nh{background:linear-gradient(135deg,#b91c1c,#7f1d1d);padding:11px 13px;display:flex;align-items:center;justify-content:space-between}
+.nht{font-size:0.87rem;font-weight:800;color:#fff;display:flex;align-items:center;gap:6px}
 .nid{font-family:var(--mo);font-size:0.57rem;color:#ffffff55;background:#ffffff10;padding:2px 7px;border-radius:6px}
-.nb{padding:12px}
-.ni{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:10px;padding-bottom:10px;border-bottom:1px solid var(--bo)}
+.nb{padding:11px}
+.ni{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:9px;padding-bottom:9px;border-bottom:1px solid var(--bo)}
 .ni .cfv{font-size:0.71rem}
-.pt{font-size:0.63rem;font-weight:700;color:var(--mu);letter-spacing:0.8px;text-transform:uppercase;margin-bottom:7px}
-.pr{display:flex;align-items:center;gap:8px;padding:8px;border-radius:9px;background:var(--s3);margin-bottom:5px}
-.pn{width:26px;height:26px;border-radius:50%;background:var(--s4);border:1.5px solid var(--bo2);display:flex;align-items:center;justify-content:center;font-size:0.67rem;font-weight:800;flex-shrink:0;transition:all .18s}
+.pt{font-size:0.62rem;font-weight:700;color:var(--mu);letter-spacing:0.8px;text-transform:uppercase;margin-bottom:6px}
+.pr{display:flex;align-items:center;gap:7px;padding:7px;border-radius:8px;background:var(--s3);margin-bottom:5px}
+.pn{width:24px;height:24px;border-radius:50%;background:var(--s4);border:1.5px solid var(--bo2);display:flex;align-items:center;justify-content:center;font-size:0.67rem;font-weight:800;flex-shrink:0;transition:all .18s}
 .pn.a{background:var(--gr);border-color:var(--gr);color:#fff}
 .pi{flex:1;min-width:0}
-.pp{font-family:var(--mo);font-size:0.67rem;color:var(--mu)}
-.pw{font-size:0.64rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pp{font-family:var(--mo);font-size:0.65rem;color:var(--mu)}
+.pw{font-size:0.63rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .pw.a{color:var(--ac2)}.pw.l{color:var(--mu)}
-.bas{padding:4px 10px;border-radius:6px;font-size:0.62rem;font-weight:700;font-family:var(--fn);cursor:pointer;border:1px solid;white-space:nowrap;transition:all .18s;flex-shrink:0}
-.bas.l{background:#7c3aed12;color:var(--ac);border-color:#7c3aed50}.bas.l:hover{background:var(--ac);color:#fff;border-color:var(--ac)}
-.bas.a{background:#10b98112;color:var(--gr);border-color:#10b98150}.bas.a:hover{background:var(--re);color:#fff;border-color:var(--re)}
-.na{display:flex;gap:6px;padding:10px 12px;border-top:1px solid var(--bo)}
-.cw{padding:18px 14px;max-width:500px;margin:0 auto}
-.cwt{font-size:1.2rem;font-weight:800;margin-bottom:4px;background:linear-gradient(135deg,var(--ac),var(--ac2));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-.cws{color:var(--mu);font-size:0.79rem;line-height:1.5;margin-bottom:18px}
-.dbs{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:20px}
-.dbo{background:var(--s2);border:2px solid var(--bo);border-radius:13px;padding:15px 11px;cursor:pointer;transition:all .18s;text-align:center}
+.bas{padding:4px 9px;border-radius:6px;font-size:0.61rem;font-weight:700;font-family:var(--fn);cursor:pointer;border:1px solid;white-space:nowrap;transition:all .18s;flex-shrink:0}
+.bas.l{background:#7c3aed12;color:var(--ac);border-color:#7c3aed50}.bas.l:hover{background:var(--ac);color:#fff}
+.bas.a{background:#10b98112;color:var(--gr);border-color:#10b98150}.bas.a:hover{background:var(--red);color:#fff;border-color:var(--red)}
+.na{display:flex;gap:6px;padding:9px 11px;border-top:1px solid var(--bo)}
+
+/* config */
+.cw{padding:16px}
+.cwt{font-size:1.1rem;font-weight:800;margin-bottom:4px;background:linear-gradient(135deg,var(--ac),var(--ac2));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.cws{color:var(--mu);font-size:0.78rem;line-height:1.5;margin-bottom:16px}
+.dbs{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:18px}
+.dbo{background:var(--s2);border:2px solid var(--bo);border-radius:13px;padding:14px 10px;cursor:pointer;transition:all .18s;text-align:center}
 .dbo:hover{border-color:var(--bo2)}
-.dbo.on.sp{border-color:var(--sp);background:#3ecf8e0a}
-.dbo.on.gs{border-color:var(--gs);background:#34a8530a}
-.doi{font-size:1.7rem;margin-bottom:5px}
+.dbo.on.sp{border-color:var(--gr);background:#10b9810a}
+.dbo.on.gs{border-color:#34a853;background:#34a8530a}
+.doi{font-size:1.7rem;margin-bottom:4px}
 .don{font-size:0.83rem;font-weight:800;margin-bottom:3px}
-.dod{font-size:0.63rem;color:var(--mu);line-height:1.4}
+.dod{font-size:0.62rem;color:var(--mu);line-height:1.4}
 .dob{display:inline-block;margin-top:5px;font-size:0.57rem;font-weight:700;padding:2px 8px;border-radius:99px;font-family:var(--mo)}
-.dbo.sp .dob{background:#3ecf8e18;color:var(--sp)}
-.dbo.gs .dob{background:#34a85318;color:var(--gs)}
+.dbo.sp .dob{background:#10b98118;color:var(--gr)}
+.dbo.gs .dob{background:#34a85318;color:#34a853}
 .pan{display:none}.pan.on{display:block}
-.sts{display:flex;flex-direction:column;gap:8px;margin-bottom:16px}
-.st{background:var(--s2);border:1px solid var(--bo);border-radius:11px;padding:12px;display:flex;gap:9px;align-items:flex-start}
-.stn{width:24px;height:24px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:0.68rem;font-weight:800;color:#fff}
-.stn.sp{background:linear-gradient(135deg,var(--sp),#0ea5e9)}
-.stn.gs{background:linear-gradient(135deg,var(--gs),#0ea5e9)}
-.stt{font-size:0.77rem;color:var(--tx);line-height:1.5}
+.sts{display:flex;flex-direction:column;gap:7px;margin-bottom:14px}
+.st{background:var(--s2);border:1px solid var(--bo);border-radius:10px;padding:11px;display:flex;gap:8px;align-items:flex-start}
+.stn{width:22px;height:22px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:0.67rem;font-weight:800;color:#fff}
+.stn.sp{background:linear-gradient(135deg,var(--gr),#0ea5e9)}
+.stn.gs{background:linear-gradient(135deg,#34a853,#0ea5e9)}
+.stt{font-size:0.76rem;color:var(--tx);line-height:1.5}
 .stt b{color:var(--ac2)}
 .stt code{font-family:var(--mo);font-size:0.7rem;background:var(--s4);padding:1px 5px;border-radius:4px}
-.sr{display:flex;align-items:center;gap:8px;background:var(--s2);border:1px solid var(--bo);border-radius:10px;padding:9px 12px;margin-bottom:9px}
-.sd{width:8px;height:8px;border-radius:50%;background:var(--re);flex-shrink:0}
+.sr{display:flex;align-items:center;gap:7px;background:var(--s2);border:1px solid var(--bo);border-radius:9px;padding:8px 11px;margin-bottom:8px}
+.sd{width:8px;height:8px;border-radius:50%;background:var(--red);flex-shrink:0}
 .sd.on{background:var(--gr)}
-.sl{font-size:0.77rem;color:var(--mu2)}
-.ib{background:var(--s2);border:1px solid var(--bo);border-radius:11px;padding:12px 13px;font-size:0.74rem;color:var(--mu);line-height:1.7;margin-top:13px}
+.sl{font-size:0.76rem;color:var(--mu2)}
+.ib{background:var(--s2);border:1px solid var(--bo);border-radius:10px;padding:11px 12px;font-size:0.73rem;color:var(--mu);line-height:1.7;margin-top:12px}
 .ib b{color:var(--tx)}
-.pfr{display:grid;grid-template-columns:28px 1fr 1fr;gap:6px;align-items:center;margin-bottom:6px}
-.pfl{font-size:0.68rem;font-weight:800;color:var(--mu2);background:var(--s4);width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.sqlp{background:var(--bg);border:1px solid var(--bo2);border-radius:9px;padding:11px;font-family:var(--mo);font-size:0.66rem;color:var(--tx);overflow-x:auto;white-space:pre;margin-bottom:9px;line-height:1.6;position:relative}
-.sqlc{position:absolute;top:7px;right:7px;background:var(--s4);border:1px solid var(--bo2);color:var(--mu2);font-size:0.65rem;font-family:var(--fn);font-weight:700;padding:3px 8px;border-radius:6px;cursor:pointer}
-.empty{text-align:center;padding:38px 16px;color:var(--mu)}
-.ei{font-size:2.6rem;margin-bottom:9px}
-.et{font-size:0.88rem;font-weight:700;color:var(--tx);margin-bottom:3px}
-.es{font-size:0.77rem}
-.toast{position:fixed;bottom:82px;left:50%;transform:translateX(-50%) translateY(8px);background:var(--s3);border:1px solid var(--bo2);padding:8px 17px;border-radius:99px;font-size:0.79rem;font-weight:700;opacity:0;pointer-events:none;transition:all .25s;z-index:999;white-space:nowrap}
-.toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
-.spi{display:inline-block;width:13px;height:13px;border:2px solid #fff4;border-top-color:#fff;border-radius:50%;animation:spia .6s linear infinite}
-@keyframes spia{to{transform:rotate(360deg)}}
-.ncfg{display:flex;margin:9px 13px;background:#ef444412;border:1px solid #ef444440;border-radius:9px;padding:9px 12px;font-size:0.77rem;color:var(--re);align-items:center;gap:7px;cursor:pointer}
+
+/* forms */
+.fg{margin-bottom:10px}
+.fl2{display:block;font-size:0.65rem;color:var(--mu);font-weight:700;letter-spacing:0.5px;text-transform:uppercase;margin-bottom:4px}
+.fi,.fse,.fta{width:100%;background:var(--s3);border:1px solid var(--bo);border-radius:9px;padding:9px 11px;color:var(--tx);font-family:var(--mo);font-size:0.81rem;outline:none;transition:border-color .2s}
+.fi:focus,.fse:focus,.fta:focus{border-color:var(--ac)}
+.fse{appearance:none;cursor:pointer}
+.fta{resize:vertical;min-height:68px;font-size:0.76rem}
+.fg2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+input[type=date]{color-scheme:dark}
+.sep{font-size:0.6rem;font-weight:700;color:var(--mu);letter-spacing:1px;text-transform:uppercase;display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.sep::before,.sep::after{content:'';flex:1;height:1px;background:var(--bo)}
+.bsub{width:100%;padding:10px;border:none;border-radius:10px;color:#fff;font-family:var(--fn);font-size:0.87rem;font-weight:800;cursor:pointer;margin-top:5px;transition:opacity .2s}
+.bsub:hover{opacity:.85}
+.bsub.pu{background:linear-gradient(135deg,var(--ac),#5b21b6)}
+.bsub.sp{background:linear-gradient(135deg,var(--gr),#0ea5e9)}
+.bsub.gs{background:linear-gradient(135deg,#34a853,#16a34a)}
+
+.pfr{display:grid;grid-template-columns:26px 1fr 1fr;gap:5px;align-items:center;margin-bottom:5px}
+.pfl{font-size:0.67rem;font-weight:800;color:var(--mu2);background:var(--s4);width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+
+.sqlp{background:var(--bg);border:1px solid var(--bo2);border-radius:9px;padding:10px;font-family:var(--mo);font-size:0.65rem;color:var(--tx);overflow-x:auto;white-space:pre;margin-bottom:8px;line-height:1.6;position:relative}
+.sqlc{position:absolute;top:6px;right:6px;background:var(--s4);border:1px solid var(--bo2);color:var(--mu2);font-size:0.64rem;font-family:var(--fn);font-weight:700;padding:3px 7px;border-radius:6px;cursor:pointer}
+
+.ext{background:var(--s3);border:1px dashed var(--ac);border-radius:12px;padding:12px;margin-bottom:12px}
+.extt{font-size:0.65rem;font-weight:700;color:var(--ac2);letter-spacing:0.5px;margin-bottom:7px}
+.exta{width:100%;background:var(--bg);border:1px solid var(--bo);border-radius:8px;padding:8px;color:var(--tx);font-family:var(--mo);font-size:0.74rem;outline:none;resize:vertical;min-height:60px;margin-bottom:6px}
+.extb{width:100%;padding:8px;background:linear-gradient(135deg,var(--ac),var(--ac2));border:none;border-radius:8px;color:#fff;font-family:var(--fn);font-size:0.76rem;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:5px;transition:opacity .2s}
+.extb:hover{opacity:.85}.extb:disabled{opacity:.45;cursor:not-allowed}
+
+.ncfg{display:flex;margin:9px 12px;background:#e8192c12;border:1px solid #e8192c40;border-radius:9px;padding:8px 11px;font-size:0.76rem;color:var(--red);align-items:center;gap:7px;cursor:pointer}
 .ncfg.hid{display:none!important}
-.dbg{display:none;margin:8px 13px;background:#0a0a15;border:1px solid var(--ac);border-radius:10px;padding:11px;font-family:var(--mo);font-size:0.68rem;color:#a78bfa;max-height:180px;overflow-y:auto;white-space:pre-wrap;word-break:break-all}
-::-webkit-scrollbar{width:4px;height:4px}
-::-webkit-scrollbar-track{background:transparent}
-::-webkit-scrollbar-thumb{background:var(--bo2);border-radius:99px}
+
+/* OVERLAYS / MODALS */
+.ov{display:none;position:fixed;inset:0;background:#000b;backdrop-filter:blur(5px);z-index:300;align-items:flex-end;justify-content:center}
+.ov.open{display:flex}
+.ov.ctr{align-items:center}
+.modal{background:var(--s1);border:1px solid var(--bo2);border-radius:var(--r) var(--r) 0 0;padding:16px;width:100%;max-width:500px;max-height:92vh;overflow-y:auto;animation:slideup .22s ease}
+.modal.fl{border-radius:var(--r);width:calc(100% - 28px);max-width:390px;animation:sc .2s ease}
+@keyframes slideup{from{transform:translateY(30px);opacity:0}to{transform:translateY(0);opacity:1}}
+@keyframes sc{from{transform:scale(.93);opacity:0}to{transform:scale(1);opacity:1}}
+.mh{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.mt{font-size:1rem;font-weight:800}
+.mc{background:var(--s4);border:none;color:var(--mu);font-size:0.9rem;width:27px;height:27px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .18s}
+.mc:hover{background:var(--red);color:#fff}
+
+/* empty state */
+.empty{text-align:center;padding:36px 14px;color:var(--mu)}
+.ei{font-size:2.4rem;margin-bottom:8px}
+.et{font-size:0.87rem;font-weight:700;color:var(--tx);margin-bottom:3px}
+.es{font-size:0.76rem}
+
+/* toast */
+.toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%) translateY(8px);background:var(--s3);border:1px solid var(--bo2);padding:8px 16px;border-radius:99px;font-size:0.79rem;font-weight:700;opacity:0;pointer-events:none;transition:all .25s;z-index:999;white-space:nowrap}
+.toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
+
+.spi{display:inline-block;width:12px;height:12px;border:2px solid #fff4;border-top-color:#fff;border-radius:50%;animation:spin .6s linear infinite}
+
+/* dbg */
+.dbg{display:none;margin:7px 12px;background:#0a0a15;border:1px solid var(--ac);border-radius:10px;padding:10px;font-family:var(--mo);font-size:0.67rem;color:#a78bfa;max-height:160px;overflow-y:auto;white-space:pre-wrap;word-break:break-all}
 </style>
 </head>
 <body>
+
+<!-- ─── TOPBAR ─── -->
 <div class="topbar">
-  <div style="display:flex;align-items:center;gap:7px">
-    <div class="logo" onclick="goHome()">MISAKROOS</div>
-    <button class="tb" onclick="goHome()" style="padding:6px 9px;font-size:.9rem" title="Inicio">🏠</button>
+  <div style="display:flex;align-items:center;gap:8px">
+    <div class="logo" onclick="goLanding()">
+      MISAKROOS
+      <span class="logo-sub">Revendedores</span>
+    </div>
   </div>
-  <div class="tr">
-    <div class="pill none" id="dbPill" onclick="showV('config')"><div class="pdot"></div><span id="dbLbl">Sin DB</span></div>
-    <button class="tb adm" onclick="showV('admin')">⚡ Admin</button>
-    <button class="tb" onclick="showV('config')">⚙️</button>
-    <button class="tb" onclick="togDbg()" style="padding:6px 8px;font-size:.8rem">🔍</button>
+  <div class="nav">
+    <div class="pill none" id="dbPill" onclick="goPanel();showCfg()"><div class="pdot"></div><span id="dbLbl">Sin DB</span></div>
+    <button class="nav-btn active" id="btnLanding" onclick="goLanding()">🏠 Tienda</button>
+    <button class="nav-btn panel-btn" id="btnPanel" onclick="goPanel()">⚡ Panel</button>
   </div>
 </div>
-<div class="ncfg hid" id="noBanner" onclick="showV('config')">⚠️ Sin base de datos — tocá para configurar</div>
+<div class="ncfg hid" id="noBanner" onclick="goPanel();showCfg()">⚠️ Sin base de datos — tocá para configurar</div>
 <div class="dbg" id="dbgPanel"></div>
 
-<!-- CLIENTES -->
+<!-- ═══════════════════════════
+     LANDING
+═══════════════════════════ -->
+<div id="vLanding">
+  <div class="landing">
 
-<div id="vCli">
-  <div class="tabs">
-    <div class="tab on" id="tAct" onclick="setTab('activos')">Activos <span class="tn" id="nAct">0</span></div>
-    <div class="tab" id="tPrx" onclick="setTab('proximos')">Próximos a vencer <span class="tn" id="nPrx">0</span></div>
-    <div class="tab" id="tVen" onclick="setTab('vencidos')">Vencidos <span class="tn" id="nVen">0</span></div>
-  </div>
-  <div class="main">
-    <div class="sb">
-      <input type="text" id="sQ" placeholder="🔍  Buscar nombre, teléfono, correo..." oninput="renderCli()">
-      <button class="rbtn" id="rBtn" onclick="reload()" title="Actualizar">↻</button>
+    <div class="hero">
+      <div class="hero-brand">MISAKROOS</div>
+      <div class="hero-tag">⚡ Revendedores · Tienda Digital</div>
+      <div class="hero-q">¿Qué tipo de <span>Netflix</span><br>estás ofreciendo?</div>
     </div>
-    <div id="cliList"></div>
+
+    <!-- PASO 1 -->
+    <div class="step">
+      <div class="step-label"><strong>Paso 1</strong> &nbsp;País del cliente</div>
+      <div class="country-row">
+        <button class="ccard" id="lbtn-ar" onclick="setCountry('AR')">
+          <span class="ccard-flag">🇦🇷</span>
+          <span class="ccard-name">Argentina</span>
+          <span class="ccard-cur">Precios en ARS</span>
+        </button>
+        <button class="ccard" id="lbtn-uy" onclick="setCountry('UY')">
+          <span class="ccard-flag">🇺🇾</span>
+          <span class="ccard-name">Uruguay</span>
+          <span class="ccard-cur">Precios en UYU</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- PASO 2 -->
+    <div class="step" id="step2">
+      <div class="step-label"><strong>Paso 2</strong> &nbsp;Elegí la opción para tu cliente</div>
+      <div class="opts">
+
+        <!-- PERFIL PRIVADO -->
+        <div class="ocard priv">
+          <div class="ocard-body">
+            <div class="ocard-icon">🔒</div>
+            <div class="ocard-info">
+              <div class="ocard-tag">Cuenta compartida</div>
+              <div class="ocard-name">Perfil Privado</div>
+              <div class="bullets">
+                <div class="bullet"><span class="bdot"></span>Perfil exclusivo con PIN de seguridad propio</div>
+                <div class="bullet"><span class="bdot"></span>Historial, lista y recomendaciones privados</div>
+                <div class="bullet"><span class="bdot"></span>Un dispositivo activo (recomendado: Smart TV)</div>
+                <div class="bullet"><span class="bdot"></span>Opción económica, ideal para uso personal</div>
+              </div>
+            </div>
+            <div class="ocard-price">
+              <div class="price-val p-ar">$5.500<em class="price-unit">ARS/mes</em></div>
+              <div class="price-val p-uy show">$160<em class="price-unit">UYU/mes</em></div>
+            </div>
+          </div>
+          <div class="ocard-cta">
+            <a id="lbtn-priv" href="#" class="btn-opt btn-priv">
+              <svg class="wa-svg" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+              ¡Quiero este!
+            </a>
+          </div>
+        </div>
+
+        <!-- PERFIL EXTRA -->
+        <div class="ocard extra">
+          <div class="ocard-body">
+            <div class="ocard-icon">⚡</div>
+            <div class="ocard-info">
+              <div class="ocard-tag">Cuenta privada</div>
+              <div class="ocard-name">Perfil Extra</div>
+              <div class="bullets">
+                <div class="bullet"><span class="bdot"></span>Cuenta 100% privada, nadie más comparte el acceso</div>
+                <div class="bullet"><span class="bdot"></span>App en múltiples dispositivos (TV, celular, tablet, PC)</div>
+                <div class="bullet"><span class="bdot"></span>Reproducción en un dispositivo a la vez</div>
+                <div class="bullet"><span class="bdot"></span>Historial, listas y perfil completamente exclusivos</div>
+              </div>
+            </div>
+            <div class="ocard-price">
+              <div class="price-val p-ar">$6.000<em class="price-unit">ARS/mes</em></div>
+              <div class="price-val p-uy show">$200<em class="price-unit">UYU/mes</em></div>
+            </div>
+          </div>
+          <div class="ocard-cta">
+            <a id="lbtn-extra" href="#" class="btn-opt btn-extra">
+              <svg class="wa-svg" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+              ¡Quiero este!
+            </a>
+          </div>
+        </div>
+
+        <!-- CUENTA COMPLETA -->
+        <div class="ocard full">
+          <div class="ocard-body">
+            <div class="ocard-icon">🎬</div>
+            <div class="ocard-info">
+              <div class="ocard-tag">Netflix · Cuenta completa</div>
+              <div class="ocard-name">Cuenta Completa</div>
+              <div class="bullets">
+                <div class="bullet"><span class="bdot"></span>Hasta 5 perfiles independientes con historial propio</div>
+                <div class="bullet"><span class="bdot"></span>Varias pantallas simultáneas en cualquier dispositivo</div>
+                <div class="bullet"><span class="bdot"></span>Calidad HD / Full HD — sin restricciones</div>
+                <div class="bullet"><span class="bdot"></span>Ideal para revender: comprás una y vendés 5 perfiles</div>
+              </div>
+            </div>
+            <div class="ocard-price">
+              <div class="price-val p-ar">$16.000<em class="price-unit">ARS/mes</em></div>
+              <div class="price-val p-uy show">$600<em class="price-unit">UYU/mes</em></div>
+            </div>
+          </div>
+          <div class="ocard-cta">
+            <a id="lbtn-nf" href="#" class="btn-opt btn-full">
+              <svg class="wa-svg" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+              ¡Quiero este!
+            </a>
+          </div>
+        </div>
+
+      </div>
+      <p class="hint" style="margin-top:12px">Al tocar "¡Quiero este!" se abre WhatsApp con la consulta lista 🚀</p>
+    </div>
+
   </div>
 </div>
 
-<!-- ADMIN -->
+<!-- ═══════════════════════════
+     PANEL
+═══════════════════════════ -->
+<div id="vPanel" style="display:none">
 
-<div id="vAdm" style="display:none">
-  <div class="aw">
-    <div class="ah">
-      <div><div style="font-size:1.02rem;font-weight:800">Cuentas Netflix</div><div style="font-size:.71rem;color:var(--mu);margin-top:1px">Perfiles y asignaciones</div></div>
-      <button class="tb adm" onclick="openMCuenta()">+ Nueva cuenta</button>
-    </div>
-    <div id="cuentaList"></div>
+  <!-- sub-tabs panel -->
+  <div class="ptabs">
+    <div class="ptab on" id="ptCli" onclick="setPTab('cli')">Clientes <span class="tn" id="nAll">0</span></div>
+    <div class="ptab" id="ptAct" onclick="setPTab('act')">Activos <span class="tn" id="nAct">0</span></div>
+    <div class="ptab" id="ptPrx" onclick="setPTab('prx')">Por vencer <span class="tn" id="nPrx">0</span></div>
+    <div class="ptab" id="ptVen" onclick="setPTab('ven')">Vencidos <span class="tn" id="nVen">0</span></div>
+    <div class="ptab" id="ptAdm" onclick="setPTab('adm')">Cuentas NF</div>
+    <div class="ptab" id="ptCfg" onclick="setPTab('cfg')">⚙️ Config</div>
   </div>
-</div>
 
-<!-- CONFIG -->
-
-<div id="vCfg" style="display:none">
-  <div class="cw">
-    <div class="cwt">Configuración</div>
-    <div class="cws">Elegí tu base de datos. Podés cambiarla cuando quieras.</div>
-    <div class="dbs">
-      <div class="dbo sp" id="optSp" onclick="selDB('sp')">
-        <div class="doi">🟢</div><div class="don">Supabase</div>
-        <div class="dod">PostgreSQL con API Key privada. Más seguro.</div>
-        <div class="dob">RECOMENDADO</div>
+  <!-- CLIENTES -->
+  <div id="pCli">
+    <div class="pmain">
+      <div class="sb">
+        <input type="text" id="sQ" placeholder="🔍  Buscar nombre, teléfono, correo..." oninput="renderCli()">
+        <button class="rbtn" id="rBtn" onclick="reload()" title="Actualizar">↻</button>
       </div>
-      <div class="dbo gs" id="optGs" onclick="selDB('gs')">
-        <div class="doi">📊</div><div class="don">Google Sheets</div>
-        <div class="dod">Grilla visual editable. Fácil de ver.</div>
-        <div class="dob">MÁS SIMPLE</div>
-      </div>
-    </div>
-    <div class="pan" id="panSp">
-      <div class="sr"><div class="sd" id="dSp"></div><div class="sl" id="lSp">Sin conectar</div></div>
-      <div class="sts">
-        <div class="st"><div class="stn sp">1</div><div class="stt">Entrá a <b>supabase.com</b>, creá una cuenta gratuita y un nuevo proyecto.</div></div>
-        <div class="st"><div class="stn sp">2</div><div class="stt">En tu proyecto → <b>Settings → API</b>. Copiá la <b>Project URL</b> y la clave <b>anon public</b>.</div></div>
-        <div class="st"><div class="stn sp">3</div><div class="stt">Pegá abajo y conectá. Si es la primera vez, te mostramos el SQL para crear las tablas.</div></div>
-      </div>
-      <div class="fg"><label class="fl2">Project URL</label><input type="url" class="fi" id="spUrl" placeholder="https://xxxx.supabase.co"></div>
-      <div class="fg"><label class="fl2">Anon Key</label><input type="text" class="fi" id="spKey" placeholder="eyJhbGci..."></div>
-      <button class="bsub sp" onclick="conSp()">🟢 Conectar con Supabase</button>
-      <div class="ib">🔐 Tu <b>anon key</b> es segura en el frontend.<br>⚠️ Primera vez: ejecutá el SQL en <b>Supabase → SQL Editor</b>.</div>
-    </div>
-    <div class="pan" id="panGs">
-      <div class="sr"><div class="sd" id="dGs"></div><div class="sl" id="lGs">Sin conectar</div></div>
-      <div class="sts">
-        <div class="st"><div class="stn gs">1</div><div class="stt">Abrí un Google Sheets → <b>Extensiones → Apps Script</b> → pegá el código del <b>code.gs</b>.</div></div>
-        <div class="st"><div class="stn gs">2</div><div class="stt"><b>Implementar → Nueva implementación → Aplicación web</b>. Ejecutar como: Yo. Acceso: Cualquier persona.</div></div>
-        <div class="st"><div class="stn gs">3</div><div class="stt">Pegá la URL abajo (termina en <code>/exec</code>) y conectá.</div></div>
-      </div>
-      <div class="fg"><label class="fl2">URL de Apps Script</label><input type="url" class="fi" id="gsUrl" placeholder="https://script.google.com/macros/s/.../exec"></div>
-      <button class="bsub gs" onclick="conGs()">📊 Conectar con Google Sheets</button>
-      <div class="ib">⚠️ Acceso <b>"Cualquier persona"</b> — quien tenga la URL puede ver los datos. Para más seguridad usá <b>Supabase</b>.</div>
+      <div id="cliList"></div>
     </div>
   </div>
+
+  <!-- CUENTAS NETFLIX -->
+  <div id="pAdm" style="display:none">
+    <div class="aw">
+      <div class="ah">
+        <div><div style="font-size:1rem;font-weight:800">Cuentas Netflix</div><div style="font-size:.7rem;color:var(--mu);margin-top:1px">Perfiles y asignaciones</div></div>
+        <button class="nav-btn panel-btn" onclick="openMCuenta()" style="font-size:.72rem">+ Nueva cuenta</button>
+      </div>
+      <div id="cuentaList"></div>
+    </div>
+  </div>
+
+  <!-- CONFIG -->
+  <div id="pCfg" style="display:none">
+    <div class="cw">
+      <div class="cwt">Configuración</div>
+      <div class="cws">Elegí tu base de datos. Podés cambiarla cuando quieras.</div>
+      <div class="dbs">
+        <div class="dbo sp" id="optSp" onclick="selDB('sp')">
+          <div class="doi">🟢</div><div class="don">Supabase</div>
+          <div class="dod">PostgreSQL con API Key. Más seguro.</div>
+          <div class="dob">RECOMENDADO</div>
+        </div>
+        <div class="dbo gs" id="optGs" onclick="selDB('gs')">
+          <div class="doi">📊</div><div class="don">Google Sheets</div>
+          <div class="dod">Grilla visual editable. Fácil de ver.</div>
+          <div class="dob">MÁS SIMPLE</div>
+        </div>
+      </div>
+      <div class="pan" id="panSp">
+        <div class="sr"><div class="sd" id="dSp"></div><div class="sl" id="lSp">Sin conectar</div></div>
+        <div class="sts">
+          <div class="st"><div class="stn sp">1</div><div class="stt">Entrá a <b>supabase.com</b>, creá cuenta gratuita y nuevo proyecto.</div></div>
+          <div class="st"><div class="stn sp">2</div><div class="stt">En tu proyecto → <b>Settings → API</b>. Copiá <b>Project URL</b> y <b>anon public key</b>.</div></div>
+          <div class="st"><div class="stn sp">3</div><div class="stt">Pegá abajo y conectá. Si es primera vez, te mostramos el SQL para crear las tablas.</div></div>
+        </div>
+        <div class="fg"><label class="fl2">Project URL</label><input type="url" class="fi" id="spUrl" placeholder="https://xxxx.supabase.co"></div>
+        <div class="fg"><label class="fl2">Anon Key</label><input type="text" class="fi" id="spKey" placeholder="eyJhbGci..."></div>
+        <button class="bsub sp" onclick="conSp()">🟢 Conectar con Supabase</button>
+        <div class="ib">🔐 Tu <b>anon key</b> es segura en el frontend.<br>⚠️ Primera vez: ejecutá el SQL en <b>Supabase → SQL Editor</b>.</div>
+      </div>
+      <div class="pan" id="panGs">
+        <div class="sr"><div class="sd" id="dGs"></div><div class="sl" id="lGs">Sin conectar</div></div>
+        <div class="sts">
+          <div class="st"><div class="stn gs">1</div><div class="stt">Abrí un Google Sheets → <b>Extensiones → Apps Script</b> → pegá el código del <b>code.gs</b>.</div></div>
+          <div class="st"><div class="stn gs">2</div><div class="stt"><b>Implementar → Nueva implementación → Aplicación web</b>. Ejecutar como: Yo. Acceso: Cualquier persona.</div></div>
+          <div class="st"><div class="stn gs">3</div><div class="stt">Pegá la URL abajo (termina en <code>/exec</code>) y conectá.</div></div>
+        </div>
+        <div class="fg"><label class="fl2">URL de Apps Script</label><input type="url" class="fi" id="gsUrl" placeholder="https://script.google.com/macros/s/.../exec"></div>
+        <button class="bsub gs" onclick="conGs()">📊 Conectar con Google Sheets</button>
+        <div class="ib">⚠️ Acceso <b>"Cualquier persona"</b> — quien tenga la URL puede ver los datos. Para más seguridad usá <b>Supabase</b>.</div>
+      </div>
+    </div>
+  </div>
+
 </div>
 
+<!-- FAB -->
 <button class="fab" id="fabBtn" onclick="openMCli()">+</button>
 
 <div class="toast" id="toast"></div>
 
-<!-- MODAL CLIENTE -->
-
+<!-- ─── MODAL CLIENTE ─── -->
 <div class="ov" id="mCli">
   <div class="modal">
     <div class="mh"><div class="mt" id="mCliT">Nuevo Cliente</div><button class="mc" onclick="closeM('mCli')">✕</button></div>
@@ -287,11 +665,10 @@ input[type=date]{color-scheme:dark}
   </div>
 </div>
 
-<!-- MODAL CUENTA -->
-
+<!-- ─── MODAL CUENTA ─── -->
 <div class="ov" id="mCuenta">
   <div class="modal">
-    <div class="mh"><div class="mt">Nueva Cuenta Netflix</div><button class="mc" onclick="closeM('mCuenta')">✕</button></div>
+    <div class="mh"><div class="mt" id="mCuTit">Nueva Cuenta Netflix</div><button class="mc" onclick="closeM('mCuenta')">✕</button></div>
     <input type="hidden" id="eCuId">
     <div class="fg"><label class="fl2">Correo</label><input type="email" class="fi" id="cuCor" placeholder="cuenta@gmail.com"></div>
     <div class="fg2">
@@ -304,8 +681,7 @@ input[type=date]{color-scheme:dark}
   </div>
 </div>
 
-<!-- MODAL ASIGNAR -->
-
+<!-- ─── MODAL ASIGNAR ─── -->
 <div class="ov ctr" id="mAsig">
   <div class="modal fl">
     <div class="mh"><div class="mt">Asignar Perfil</div><button class="mc" onclick="closeM('mAsig')">✕</button></div>
@@ -317,605 +693,450 @@ input[type=date]{color-scheme:dark}
   </div>
 </div>
 
-<!-- MODAL SQL -->
-
+<!-- ─── MODAL SQL ─── -->
 <div class="ov ctr" id="mSql">
   <div class="modal fl" style="max-width:440px">
     <div class="mh"><div class="mt">⚠️ Crear tablas en Supabase</div><button class="mc" onclick="closeM('mSql')">✕</button></div>
-    <p style="font-size:.78rem;color:var(--mu2);margin-bottom:11px;line-height:1.5">Andá a <b style="color:var(--ac2)">Supabase → SQL Editor → New Query</b>, pegá este SQL y ejecutalo. Después tocá el botón de abajo.</p>
+    <p style="font-size:.77rem;color:var(--mu2);margin-bottom:10px;line-height:1.5">Andá a <b style="color:var(--ac2)">Supabase → SQL Editor → New Query</b>, pegá este SQL y ejecutalo.</p>
     <div style="position:relative"><pre class="sqlp" id="sqlTxt"></pre><button class="sqlc" id="sqlBtn" onclick="copSQL()">Copiar</button></div>
     <button class="bsub sp" onclick="conSpTras()">✅ Ya ejecuté el SQL — Conectar</button>
   </div>
 </div>
 
 <script>
-var CFG = JSON.parse(localStorage.getItem('mk2_cfg') || '{}');
-var clientes = [];
-var cuentas = [];
-var curTab = 'activos';
-var selDbT = CFG.type || 'sp';
-var dbgVis = false;
-var _tt;
+/* ════════════════════════════════════════
+   LANDING LOGIC
+════════════════════════════════════════ */
+var WA = '5492645182955';
+var country = null;
 
-function init() {
-  selDB(selDbT);
-  updPill();
-  chkBanner();
-  if (isConn()) { reload(); } else { renderCli(); renderCuentas(); }
-  buildPfForm();
+var msgs = {
+  priv:  { AR:'Hola Rodrigo, soy revendedor de Tienda digital y quiero Netflix — Perfil Privado (cuenta compartida) — Argentina', UY:'Hola Rodrigo, soy revendedor de Tienda digital y quiero Netflix — Perfil Privado (cuenta compartida) — Uruguay' },
+  extra: { AR:'Hola Rodrigo, soy revendedor de Tienda digital y quiero Netflix — Perfil Extra (cuenta privada) — Argentina', UY:'Hola Rodrigo, soy revendedor de Tienda digital y quiero Netflix — Perfil Extra (cuenta privada) — Uruguay' },
+  nf:    { AR:'Hola Rodrigo, soy revendedor de Tienda digital y quiero Netflix — Cuenta Completa — Argentina', UY:'Hola Rodrigo, soy revendedor de Tienda digital y quiero Netflix — Cuenta Completa — Uruguay' },
+};
+
+function waLink(type){ return 'https://wa.me/'+WA+'?text='+encodeURIComponent(msgs[type][country||'UY']); }
+
+function updateLinks(){
+  document.getElementById('lbtn-priv').href  = waLink('priv');
+  document.getElementById('lbtn-extra').href = waLink('extra');
+  document.getElementById('lbtn-nf').href    = waLink('nf');
 }
 
-function isConn() {
-  if (CFG.type === 'sp') return !!(CFG.spUrl && CFG.spKey);
-  if (CFG.type === 'gs') return !!CFG.gsUrl;
+function setCountry(c){
+  country = c;
+  document.getElementById('lbtn-ar').classList.toggle('sel', c==='AR');
+  document.getElementById('lbtn-uy').classList.toggle('sel', c==='UY');
+  document.querySelectorAll('.p-ar').forEach(function(el){ el.style.display = c==='AR'?'':'none'; el.classList.toggle('show', c==='AR'); });
+  document.querySelectorAll('.p-uy').forEach(function(el){ el.style.display = c==='UY'?'':'none'; el.classList.toggle('show', c==='UY'); });
+  document.getElementById('step2').classList.add('vis');
+  updateLinks();
+}
+updateLinks();
+
+/* ════════════════════════════════════════
+   VIEW SWITCHING
+════════════════════════════════════════ */
+var curPTab = 'cli';
+
+function goLanding(){
+  document.getElementById('vLanding').style.cssText = 'display:block';
+  document.getElementById('vPanel').style.cssText = 'display:none';
+  document.getElementById('btnLanding').classList.add('active');
+  document.getElementById('btnPanel').classList.remove('active');
+  document.getElementById('fabBtn').classList.remove('show');
+}
+
+function goPanel(){
+  document.getElementById('vLanding').style.cssText = 'display:none';
+  document.getElementById('vPanel').style.cssText = 'display:block';
+  document.getElementById('btnLanding').classList.remove('active');
+  document.getElementById('btnPanel').classList.add('active');
+  if(curPTab === 'cli' || curPTab === 'act' || curPTab === 'prx' || curPTab === 'ven'){
+    document.getElementById('fabBtn').classList.add('show');
+  }
+  if(isConn()){ reload(); }
+}
+
+function showCfg(){ setPTab('cfg'); }
+
+function setPTab(t){
+  curPTab = t;
+  ['cli','act','prx','ven','adm','cfg'].forEach(function(id){
+    document.getElementById('ptCli') && document.getElementById('pt'+id.charAt(0).toUpperCase()+id.slice(1)) && document.getElementById('pt'+id.charAt(0).toUpperCase()+id.slice(1)).classList.remove('on');
+  });
+  // manual
+  document.getElementById('ptCli').classList.toggle('on', t==='cli');
+  document.getElementById('ptAct').classList.toggle('on', t==='act');
+  document.getElementById('ptPrx').classList.toggle('on', t==='prx');
+  document.getElementById('ptVen').classList.toggle('on', t==='ven');
+  document.getElementById('ptAdm').classList.toggle('on', t==='adm');
+  document.getElementById('ptCfg').classList.toggle('on', t==='cfg');
+
+  document.getElementById('pCli').style.display  = (t==='cli'||t==='act'||t==='prx'||t==='ven') ? '' : 'none';
+  document.getElementById('pAdm').style.display  = t==='adm' ? '' : 'none';
+  document.getElementById('pCfg').style.display  = t==='cfg' ? '' : 'none';
+
+  document.getElementById('fabBtn').classList.toggle('show', t==='cli'||t==='act'||t==='prx'||t==='ven');
+
+  if(t==='cli'||t==='act'||t==='prx'||t==='ven') renderCli();
+  if(t==='adm') renderCuentas();
+}
+
+/* ════════════════════════════════════════
+   DB CONFIG
+════════════════════════════════════════ */
+var CFG = JSON.parse(localStorage.getItem('mk2_cfg')||'{}');
+var clientes = [];
+var cuentas  = [];
+var _tt;
+var selDbT = CFG.type || 'sp';
+
+function isConn(){
+  if(CFG.type==='sp') return !!(CFG.spUrl && CFG.spKey);
+  if(CFG.type==='gs') return !!CFG.gsUrl;
   return false;
 }
 
-function updPill() {
+function updPill(){
   var p = document.getElementById('dbPill');
   var l = document.getElementById('dbLbl');
   p.className = 'pill';
-  if (!isConn()) { p.classList.add('none'); l.textContent = 'Sin DB'; }
-  else if (CFG.type === 'sp') { p.classList.add('sp'); l.textContent = 'Supabase'; }
-  else { p.classList.add('gs'); l.textContent = 'Google Sheets'; }
+  if(!isConn()){ p.classList.add('none'); l.textContent='Sin DB'; }
+  else if(CFG.type==='sp'){ p.classList.add('sp'); l.textContent='Supabase'; }
+  else { p.classList.add('gs'); l.textContent='Google Sheets'; }
 }
 
-function chkBanner() {
+function chkBanner(){
   document.getElementById('noBanner').classList.toggle('hid', isConn());
 }
 
-function showV(v) {
-  document.getElementById('vCli').style.display = v === 'clientes' ? '' : 'none';
-  document.getElementById('vAdm').style.display = v === 'admin' ? '' : 'none';
-  document.getElementById('vCfg').style.display = v === 'config' ? '' : 'none';
-  document.getElementById('fabBtn').style.display = v === 'clientes' ? '' : 'none';
-}
-
-function goHome() { showV('clientes'); }
-
-function togDbg() {
-  dbgVis = !dbgVis;
-  document.getElementById('dbgPanel').style.display = dbgVis ? 'block' : 'none';
-}
-
-function log(m) {
-  var el = document.getElementById('dbgPanel');
-  el.textContent += '\n' + (typeof m === 'object' ? JSON.stringify(m) : String(m));
-  el.scrollTop = el.scrollHeight;
-}
-
-function selDB(t) {
+function selDB(t){
   selDbT = t;
-  document.getElementById('optSp').classList.toggle('on', t === 'sp');
-  document.getElementById('optGs').classList.toggle('on', t === 'gs');
-  document.getElementById('panSp').classList.toggle('on', t === 'sp');
-  document.getElementById('panGs').classList.toggle('on', t === 'gs');
-  if (CFG.spUrl) document.getElementById('spUrl').value = CFG.spUrl;
-  if (CFG.spKey) document.getElementById('spKey').value = CFG.spKey;
-  if (CFG.gsUrl) document.getElementById('gsUrl').value = CFG.gsUrl;
-  var cs = CFG.type === 'sp' && isConn();
-  var cg = CFG.type === 'gs' && isConn();
+  document.getElementById('optSp').classList.toggle('on', t==='sp');
+  document.getElementById('optGs').classList.toggle('on', t==='gs');
+  document.getElementById('panSp').classList.toggle('on', t==='sp');
+  document.getElementById('panGs').classList.toggle('on', t==='gs');
+  if(CFG.spUrl) document.getElementById('spUrl').value = CFG.spUrl;
+  if(CFG.spKey) document.getElementById('spKey').value = CFG.spKey;
+  if(CFG.gsUrl) document.getElementById('gsUrl').value = CFG.gsUrl;
+  var cs = CFG.type==='sp' && isConn();
+  var cg = CFG.type==='gs' && isConn();
   document.getElementById('dSp').classList.toggle('on', cs);
   document.getElementById('lSp').textContent = cs ? '✅ Conectado' : 'Sin conectar';
   document.getElementById('dGs').classList.toggle('on', cg);
   document.getElementById('lGs').textContent = cg ? '✅ Conectado' : 'Sin conectar';
 }
 
-function savCFG() { localStorage.setItem('mk2_cfg', JSON.stringify(CFG)); }
+function savCFG(){ localStorage.setItem('mk2_cfg', JSON.stringify(CFG)); }
 
-async function conSp() {
-  var url = document.getElementById('spUrl').value.trim().replace(/\/$/, '');
+async function conSp(){
+  var url = document.getElementById('spUrl').value.trim().replace(/\/$/,'');
   var key = document.getElementById('spKey').value.trim();
-  if (!url || !key) { toast('⚠️ Completá URL y API Key'); return; }
-  if (!url.includes('supabase.co')) { toast('⚠️ URL inválida'); return; }
-  CFG = { type: 'sp', spUrl: url, spKey: key };
+  if(!url||!key){ toast('⚠️ Completá URL y API Key'); return; }
+  if(!url.includes('supabase.co')){ toast('⚠️ URL inválida'); return; }
+  CFG = { type:'sp', spUrl:url, spKey:key };
   toast('🔄 Verificando...');
-  try {
-    var res = await fetch(url + '/rest/v1/clientes?limit=1', {
-      headers: { 'apikey': key, 'Authorization': 'Bearer ' + key, 'Accept': 'application/json' }
-    });
-    if (res.status === 200) {
-      savCFG(); updPill(); chkBanner(); selDB('sp');
-      toast('✅ Conectado a Supabase!'); await reload(); showV('clientes');
-    } else {
-      var txt = await res.text();
-      var msg = '';
-      try { msg = JSON.parse(txt).message || ''; } catch(e) {}
-      if (msg.toLowerCase().includes('exist') || res.status === 400 || res.status === 404 || res.status === 406) {
-        showSQL();
-      } else {
-        toast('❌ Error ' + res.status + (msg ? ': ' + msg : ''));
-      }
+  try{
+    var res = await fetch(url+'/rest/v1/clientes?limit=1',{ headers:{ 'apikey':key, 'Authorization':'Bearer '+key, 'Accept':'application/json' } });
+    if(res.status===200){ savCFG(); updPill(); chkBanner(); selDB('sp'); toast('✅ Conectado a Supabase!'); await reload(); setPTab('cli'); }
+    else {
+      var txt = await res.text(); var msg='';
+      try{ msg=JSON.parse(txt).message||''; }catch(e){}
+      if(msg.toLowerCase().includes('exist')||res.status===400||res.status===404||res.status===406){ showSQL(); }
+      else { toast('❌ Error '+res.status+(msg?': '+msg:'')); }
     }
-  } catch(e) { toast('❌ Red: ' + e.message); }
+  }catch(e){ toast('❌ Red: '+e.message); }
 }
 
 var SQL_TEXT = 'CREATE TABLE IF NOT EXISTS clientes (\n  id TEXT PRIMARY KEY,\n  servicio TEXT, nombre TEXT, telefono TEXT,\n  correo TEXT, contrasena TEXT, perfil TEXT,\n  pin TEXT, vencimiento TEXT, creado TEXT\n);\n\nCREATE TABLE IF NOT EXISTS cuentas (\n  id TEXT PRIMARY KEY,\n  servicio TEXT, correo TEXT, contrasena TEXT,\n  vencimiento TEXT, creado TEXT\n);\n\nCREATE TABLE IF NOT EXISTS perfiles (\n  id TEXT PRIMARY KEY,\n  cuenta_id TEXT, numero INTEGER, pin TEXT,\n  asignado BOOLEAN DEFAULT false,\n  cliente_wa TEXT, vencimiento TEXT\n);\n\nALTER TABLE clientes ENABLE ROW LEVEL SECURITY;\nALTER TABLE cuentas  ENABLE ROW LEVEL SECURITY;\nALTER TABLE perfiles ENABLE ROW LEVEL SECURITY;\n\nDROP POLICY IF EXISTS "allow_all_clientes" ON clientes;\nDROP POLICY IF EXISTS "allow_all_cuentas"  ON cuentas;\nDROP POLICY IF EXISTS "allow_all_perfiles" ON perfiles;\n\nCREATE POLICY "allow_all_clientes" ON clientes FOR ALL USING (true) WITH CHECK (true);\nCREATE POLICY "allow_all_cuentas"  ON cuentas  FOR ALL USING (true) WITH CHECK (true);\nCREATE POLICY "allow_all_perfiles" ON perfiles FOR ALL USING (true) WITH CHECK (true);';
 
-function showSQL() {
-  document.getElementById('sqlTxt').textContent = SQL_TEXT;
-  openM('mSql');
-}
+function showSQL(){ document.getElementById('sqlTxt').textContent = SQL_TEXT; openM('mSql'); }
+function copSQL(){ navigator.clipboard.writeText(SQL_TEXT).then(function(){ document.getElementById('sqlBtn').textContent='✅ Copiado'; setTimeout(function(){ document.getElementById('sqlBtn').textContent='Copiar'; },2000); }); }
 
-function copSQL() {
-  navigator.clipboard.writeText(SQL_TEXT).then(function() {
-    document.getElementById('sqlBtn').textContent = '✅ Copiado';
-    setTimeout(function() { document.getElementById('sqlBtn').textContent = 'Copiar'; }, 2000);
-  });
-}
-
-async function conSpTras() {
+async function conSpTras(){
   closeM('mSql');
-  try {
-    var res = await fetch(CFG.spUrl + '/rest/v1/clientes?limit=1', {
-      headers: { 'apikey': CFG.spKey, 'Authorization': 'Bearer ' + CFG.spKey }
-    });
-    if (res.ok) {
-      savCFG(); updPill(); chkBanner(); selDB('sp');
-      toast('✅ Conectado a Supabase!'); await reload(); showV('clientes');
-    } else { toast('❌ Todavía no — revisá el SQL'); }
-  } catch(e) { toast('❌ ' + e.message); }
+  try{
+    var res = await fetch(CFG.spUrl+'/rest/v1/clientes?limit=1',{ headers:{ 'apikey':CFG.spKey, 'Authorization':'Bearer '+CFG.spKey } });
+    if(res.ok){ savCFG(); updPill(); chkBanner(); selDB('sp'); toast('✅ Conectado a Supabase!'); await reload(); setPTab('cli'); }
+    else { toast('❌ Todavía no — revisá el SQL'); }
+  }catch(e){ toast('❌ '+e.message); }
 }
 
-async function conGs() {
+async function conGs(){
   var url = document.getElementById('gsUrl').value.trim();
-  if (!url || !url.includes('script.google.com')) { toast('⚠️ URL inválida'); return; }
-  CFG = { type: 'gs', gsUrl: url };
+  if(!url||!url.includes('script.google.com')){ toast('⚠️ URL inválida'); return; }
+  CFG = { type:'gs', gsUrl:url };
   savCFG(); updPill(); chkBanner(); selDB('gs');
   toast('🔄 Conectando...'); await reload();
-  toast('✅ Conectado a Google Sheets!'); showV('clientes');
+  toast('✅ Conectado a Google Sheets!'); setPTab('cli');
 }
 
-async function sbF(path, method, body) {
-  method = method || 'GET';
-  var h = { 'apikey': CFG.spKey, 'Authorization': 'Bearer ' + CFG.spKey, 'Content-Type': 'application/json', 'Accept': 'application/json' };
-  if (method === 'POST') h['Prefer'] = 'return=representation';
-  if (method === 'PATCH' || method === 'DELETE') h['Prefer'] = 'return=minimal';
-  var opts = { method: method, headers: h };
-  if (body) opts.body = JSON.stringify(body);
-  log('[SB] ' + method + ' ' + path);
-  var res = await fetch(CFG.spUrl + '/rest/v1/' + path, opts);
-  if (res.status === 204 || res.status === 205) return [];
+/* ════════════════════════════════════════
+   DB ADAPTERS
+════════════════════════════════════════ */
+async function sbF(path, method, body){
+  method = method||'GET';
+  var h = { 'apikey':CFG.spKey, 'Authorization':'Bearer '+CFG.spKey, 'Content-Type':'application/json', 'Accept':'application/json' };
+  if(method==='POST') h['Prefer']='return=representation';
+  if(method==='PATCH'||method==='DELETE') h['Prefer']='return=minimal';
+  var opts = { method:method, headers:h };
+  if(body) opts.body = JSON.stringify(body);
+  var res = await fetch(CFG.spUrl+'/rest/v1/'+path, opts);
+  if(res.status===204||res.status===205) return [];
   var txt = await res.text();
-  log('[SB] ' + res.status + ' ' + txt.slice(0, 150));
-  if (!res.ok) {
-    var msg = 'HTTP ' + res.status;
-    try { var j = JSON.parse(txt); msg = j.message || j.hint || j.error || msg; } catch(e) {}
-    throw new Error(msg);
-  }
+  if(!res.ok){ var msg='HTTP '+res.status; try{ var j=JSON.parse(txt); msg=j.message||j.hint||j.error||msg; }catch(e){} throw new Error(msg); }
   return txt ? JSON.parse(txt) : [];
 }
 
-async function gsF(params) {
-  var res = await fetch(CFG.gsUrl + '?' + new URLSearchParams(params));
-  if (!res.ok) throw new Error('HTTP ' + res.status);
+async function gsF(params){
+  var res = await fetch(CFG.gsUrl+'?'+new URLSearchParams(params));
+  if(!res.ok) throw new Error('HTTP '+res.status);
   return res.json();
 }
 
-function db() {
-  if (isConn() && CFG.type === 'sp') return SB;
-  if (isConn() && CFG.type === 'gs') return GS;
+function db(){
+  if(isConn()&&CFG.type==='sp') return SB;
+  if(isConn()&&CFG.type==='gs') return GS;
   return LO;
 }
 
 var SB = {
-  async getCli() { return sbF('clientes?select=*'); },
-  async addCli(d) { var r = Object.assign({ id: 'C' + Date.now(), creado: new Date().toISOString() }, d); await sbF('clientes', 'POST', r); return { ok: true }; },
-  async updCli(d) { var id = d.id; var b = Object.assign({}, d); delete b.id; delete b.creado; await sbF('clientes?id=eq.' + id, 'PATCH', b); return { ok: true }; },
-  async delCli(id) { await sbF('clientes?id=eq.' + id, 'DELETE'); return { ok: true }; },
-  async renCli(id) {
-    var c = clientes.find(function(x) { return x.id === id; });
-    if (!c) return { ok: false };
-    var f = new Date(c.vencimiento || ''); if (isNaN(f)) f = new Date();
-    f.setMonth(f.getMonth() + 1);
-    return SB.updCli(Object.assign({}, c, { id: id, vencimiento: f.toISOString().split('T')[0] }));
-  },
-  async getCuentas() {
-    var cs = await sbF('cuentas?select=*');
-    var ps = await sbF('perfiles?select=*&order=numero.asc');
-    cs.forEach(function(c) { c.perfiles = ps.filter(function(p) { return p.cuenta_id === c.id; }); });
-    return cs;
-  },
-  async addCuenta(d, perfs) {
-    var id = 'N' + Date.now();
-    await sbF('cuentas', 'POST', { id: id, servicio: 'Netflix', correo: d.correo, contrasena: d.contrasena, vencimiento: d.vencimiento, creado: new Date().toISOString() });
-    for (var i = 0; i < 5; i++) {
-      await sbF('perfiles', 'POST', { id: 'P' + Date.now() + i, cuenta_id: id, numero: i + 1, pin: (perfs[i] && perfs[i].pin) || '', asignado: false, cliente_wa: '', vencimiento: '' });
-    }
-    return { ok: true };
-  },
-  async delCuenta(id) { await sbF('perfiles?cuenta_id=eq.' + id, 'DELETE'); await sbF('cuentas?id=eq.' + id, 'DELETE'); return { ok: true }; },
-  async asignar(id, wa, ven, cd, nom) {
-    await sbF('perfiles?id=eq.' + id, 'PATCH', { asignado: true, cliente_wa: wa, vencimiento: ven });
-    if (wa) {
-      var cid = 'CA-' + id;
-      var row = { id: cid, servicio: (cd && cd.svc) || 'Netflix', nombre: nom || wa, telefono: wa.replace(/\D/g, ''), correo: (cd && cd.cor) || '', contrasena: (cd && cd.pas) || '', perfil: String((cd && cd.num) || ''), pin: (cd && cd.pin) || '', vencimiento: ven || '', creado: new Date().toISOString() };
-      var ex = await sbF('clientes?id=eq.' + cid);
-      if (!ex || ex.length === 0) { await sbF('clientes', 'POST', row); }
-      else { var u = Object.assign({}, row); delete u.id; delete u.creado; await sbF('clientes?id=eq.' + cid, 'PATCH', u); }
-    }
-    return { ok: true };
-  },
-  async liberar(id) {
-    await sbF('perfiles?id=eq.' + id, 'PATCH', { asignado: false, cliente_wa: '', vencimiento: '' });
-    try { await sbF('clientes?id=eq.CA-' + id, 'DELETE'); } catch(e) {}
-    return { ok: true };
-  }
+  async getCli(){ return sbF('clientes?select=*'); },
+  async addCli(d){ var r=Object.assign({id:'C'+Date.now(),creado:new Date().toISOString()},d); await sbF('clientes','POST',r); return{ok:true}; },
+  async updCli(d){ var id=d.id; var b=Object.assign({},d); delete b.id; delete b.creado; await sbF('clientes?id=eq.'+id,'PATCH',b); return{ok:true}; },
+  async delCli(id){ await sbF('clientes?id=eq.'+id,'DELETE'); return{ok:true}; },
+  async renCli(id){ var c=clientes.find(function(x){return x.id===id;}); if(!c) return{ok:false}; var f=new Date(c.vencimiento||''); if(isNaN(f)) f=new Date(); f.setMonth(f.getMonth()+1); return SB.updCli(Object.assign({},c,{id:id,vencimiento:f.toISOString().split('T')[0]})); },
+  async getCuentas(){ var cs=await sbF('cuentas?select=*'); var ps=await sbF('perfiles?select=*&order=numero.asc'); cs.forEach(function(c){ c.perfiles=ps.filter(function(p){return p.cuenta_id===c.id;}); }); return cs; },
+  async addCuenta(d,perfs){ var id='N'+Date.now(); await sbF('cuentas','POST',{id:id,servicio:'Netflix',correo:d.correo,contrasena:d.contrasena,vencimiento:d.vencimiento,creado:new Date().toISOString()}); for(var i=0;i<5;i++) await sbF('perfiles','POST',{id:'P'+Date.now()+i,cuenta_id:id,numero:i+1,pin:(perfs[i]&&perfs[i].pin)||'',asignado:false,cliente_wa:'',vencimiento:''}); return{ok:true}; },
+  async delCuenta(id){ await sbF('perfiles?cuenta_id=eq.'+id,'DELETE'); await sbF('cuentas?id=eq.'+id,'DELETE'); return{ok:true}; },
+  async updCuenta(id,d){ await sbF('cuentas?id=eq.'+id,'PATCH',{correo:d.correo,contrasena:d.contrasena,vencimiento:d.vencimiento}); return{ok:true}; },
+  async updPerfilPin(id,pin){ await sbF('perfiles?id=eq.'+id,'PATCH',{pin:pin}); return{ok:true}; },
+  async asignar(id,wa,ven,cd,nom){ await sbF('perfiles?id=eq.'+id,'PATCH',{asignado:true,cliente_wa:wa,vencimiento:ven}); if(wa){ var cid='CA-'+id; var row={id:cid,servicio:(cd&&cd.svc)||'Netflix',nombre:nom||wa,telefono:wa.replace(/\D/g,''),correo:(cd&&cd.cor)||'',contrasena:(cd&&cd.pas)||'',perfil:String((cd&&cd.num)||''),pin:(cd&&cd.pin)||'',vencimiento:ven||'',creado:new Date().toISOString()}; var ex=await sbF('clientes?id=eq.'+cid); if(!ex||ex.length===0) await sbF('clientes','POST',row); else{ var u=Object.assign({},row); delete u.id; delete u.creado; await sbF('clientes?id=eq.'+cid,'PATCH',u); } } return{ok:true}; },
+  async liberar(id){ await sbF('perfiles?id=eq.'+id,'PATCH',{asignado:false,cliente_wa:'',vencimiento:''}); try{ await sbF('clientes?id=eq.CA-'+id,'DELETE'); }catch(e){} return{ok:true}; }
 };
 
 var GS = {
-  async getCli() { var r = await gsF({ action: 'getClientes' }); return r.ok ? r.data : []; },
-  async addCli(d) { return gsF(Object.assign({ action: 'addCliente' }, d)); },
-  async updCli(d) { return gsF(Object.assign({ action: 'updateCliente' }, d)); },
-  async delCli(id) { return gsF({ action: 'deleteCliente', id: id }); },
-  async renCli(id) {
-    var c = clientes.find(function(x) { return x.id === id; });
-    if (!c) return { ok: false };
-    var f = new Date(c.vencimiento || ''); if (isNaN(f)) f = new Date();
-    f.setMonth(f.getMonth() + 1);
-    return GS.updCli(Object.assign({}, c, { id: id, vencimiento: f.toISOString().split('T')[0] }));
-  },
-  async getCuentas() { var r = await gsF({ action: 'getCuentas' }); return r.ok ? r.data : []; },
-  async addCuenta(d, perfs) { return gsF(Object.assign({ action: 'addCuenta', perfiles: JSON.stringify(perfs) }, d)); },
-  async delCuenta(id) { return gsF({ action: 'deleteCuenta', id: id }); },
-  async asignar(id, wa, ven) { return gsF({ action: 'asignarPerfil', id: id, clienteWA: wa, vencimiento: ven }); },
-  async liberar(id) { return gsF({ action: 'liberarPerfil', id: id }); }
+  async getCli(){ var r=await gsF({action:'getClientes'}); return r.ok?r.data:[]; },
+  async addCli(d){ return gsF(Object.assign({action:'addCliente'},d)); },
+  async updCli(d){ return gsF(Object.assign({action:'updateCliente'},d)); },
+  async delCli(id){ return gsF({action:'deleteCliente',id:id}); },
+  async renCli(id){ var c=clientes.find(function(x){return x.id===id;}); if(!c) return{ok:false}; var f=new Date(c.vencimiento||''); if(isNaN(f)) f=new Date(); f.setMonth(f.getMonth()+1); return GS.updCli(Object.assign({},c,{id:id,vencimiento:f.toISOString().split('T')[0]})); },
+  async getCuentas(){ var r=await gsF({action:'getCuentas'}); return r.ok?r.data:[]; },
+  async addCuenta(d,perfs){ return gsF(Object.assign({action:'addCuenta',perfiles:JSON.stringify(perfs)},d)); },
+  async delCuenta(id){ return gsF({action:'deleteCuenta',id:id}); },
+  async updCuenta(id,d){ return gsF({action:'updateCuenta',id:id,correo:d.correo,contrasena:d.contrasena,vencimiento:d.vencimiento}); },
+  async updPerfilPin(id,pin){ return gsF({action:'updatePerfilPin',id:id,pin:pin}); },
+  async asignar(id,wa,ven){ return gsF({action:'asignarPerfil',id:id,clienteWA:wa,vencimiento:ven}); },
+  async liberar(id){ return gsF({action:'liberarPerfil',id:id}); }
 };
 
 var LO = {
-  g: function(k) { try { return JSON.parse(localStorage.getItem('mk2_' + k) || '[]'); } catch(e) { return []; } },
-  s: function(k, v) { localStorage.setItem('mk2_' + k, JSON.stringify(v)); },
-  async getCli() { return this.g('cli'); },
-  async addCli(d) { var a = this.g('cli'); a.unshift(Object.assign({ id: 'C' + Date.now() }, d)); this.s('cli', a); return { ok: true }; },
-  async updCli(d) { var a = this.g('cli'); var i = a.findIndex(function(x) { return x.id == d.id; }); if (i >= 0) a[i] = Object.assign({}, a[i], d); this.s('cli', a); return { ok: true }; },
-  async delCli(id) { this.s('cli', this.g('cli').filter(function(c) { return c.id != id; })); return { ok: true }; },
-  async renCli(id) {
-    var a = this.g('cli'); var c = a.find(function(x) { return x.id == id; });
-    if (c) { var f = new Date(c.vencimiento || ''); if (isNaN(f)) f = new Date(); f.setMonth(f.getMonth() + 1); c.vencimiento = f.toISOString().split('T')[0]; }
-    this.s('cli', a); return { ok: true };
-  },
-  async getCuentas() {
-    var cs = this.g('cuentas'); var ps = this.g('perfiles');
-    cs.forEach(function(c) { c.perfiles = ps.filter(function(p) { return p.cuenta_id === c.id; }); });
-    return cs;
-  },
-  async addCuenta(d, perfs) {
-    var id = 'N' + Date.now(); var cs = this.g('cuentas');
-    cs.unshift({ id: id, servicio: 'Netflix', correo: d.correo, contrasena: d.contrasena, vencimiento: d.vencimiento });
-    this.s('cuentas', cs);
-    var ps = this.g('perfiles');
-    for (var i = 0; i < 5; i++) ps.push({ id: 'P' + Date.now() + i, cuenta_id: id, numero: i + 1, pin: (perfs[i] && perfs[i].pin) || '', asignado: false, cliente_wa: '', vencimiento: '' });
-    this.s('perfiles', ps); return { ok: true };
-  },
-  async delCuenta(id) {
-    this.s('cuentas', this.g('cuentas').filter(function(c) { return c.id != id; }));
-    this.s('perfiles', this.g('perfiles').filter(function(p) { return p.cuenta_id != id; }));
-    return { ok: true };
-  },
-  async asignar(id, wa, ven, cd, nom) {
-    var ps = this.g('perfiles'); var p = ps.find(function(x) { return x.id == id; });
-    if (p) { p.asignado = true; p.cliente_wa = wa; p.vencimiento = ven; }
-    this.s('perfiles', ps);
-    if (wa) {
-      var cid = 'CA-' + id; var cs = this.g('cli');
-      var row = { id: cid, servicio: (cd && cd.svc) || 'Netflix', nombre: nom || wa, telefono: wa.replace(/\D/g, ''), correo: (cd && cd.cor) || '', contrasena: (cd && cd.pas) || '', perfil: String((cd && cd.num) || ''), pin: (cd && cd.pin) || '', vencimiento: ven || '' };
-      var ix = cs.findIndex(function(c) { return c.id === cid; });
-      if (ix >= 0) cs[ix] = Object.assign({}, cs[ix], row); else cs.unshift(row);
-      this.s('cli', cs);
-    }
-    return { ok: true };
-  },
-  async liberar(id) {
-    var ps = this.g('perfiles'); var p = ps.find(function(x) { return x.id == id; });
-    if (p) { p.asignado = false; p.cliente_wa = ''; p.vencimiento = ''; }
-    this.s('perfiles', ps);
-    this.s('cli', this.g('cli').filter(function(c) { return c.id !== 'CA-' + id; }));
-    return { ok: true };
-  }
+  g:function(k){ try{ return JSON.parse(localStorage.getItem('mk2_'+k)||'[]'); }catch(e){ return []; } },
+  s:function(k,v){ localStorage.setItem('mk2_'+k,JSON.stringify(v)); },
+  async getCli(){ return this.g('cli'); },
+  async addCli(d){ var a=this.g('cli'); a.unshift(Object.assign({id:'C'+Date.now()},d)); this.s('cli',a); return{ok:true}; },
+  async updCli(d){ var a=this.g('cli'); var i=a.findIndex(function(x){return x.id==d.id;}); if(i>=0) a[i]=Object.assign({},a[i],d); this.s('cli',a); return{ok:true}; },
+  async delCli(id){ this.s('cli',this.g('cli').filter(function(c){return c.id!=id;})); return{ok:true}; },
+  async renCli(id){ var a=this.g('cli'); var c=a.find(function(x){return x.id==id;}); if(c){ var f=new Date(c.vencimiento||''); if(isNaN(f)) f=new Date(); f.setMonth(f.getMonth()+1); c.vencimiento=f.toISOString().split('T')[0]; } this.s('cli',a); return{ok:true}; },
+  async getCuentas(){ var cs=this.g('cuentas'); var ps=this.g('perfiles'); cs.forEach(function(c){ c.perfiles=ps.filter(function(p){return p.cuenta_id===c.id;}); }); return cs; },
+  async addCuenta(d,perfs){ var id='N'+Date.now(); var cs=this.g('cuentas'); cs.unshift({id:id,servicio:'Netflix',correo:d.correo,contrasena:d.contrasena,vencimiento:d.vencimiento}); this.s('cuentas',cs); var ps=this.g('perfiles'); for(var i=0;i<5;i++) ps.push({id:'P'+Date.now()+i,cuenta_id:id,numero:i+1,pin:(perfs[i]&&perfs[i].pin)||'',asignado:false,cliente_wa:'',vencimiento:''}); this.s('perfiles',ps); return{ok:true}; },
+  async delCuenta(id){ this.s('cuentas',this.g('cuentas').filter(function(c){return c.id!=id;})); this.s('perfiles',this.g('perfiles').filter(function(p){return p.cuenta_id!=id;})); return{ok:true}; },
+  async updCuenta(id,d){ var a=this.g('cuentas'); var i=a.findIndex(function(x){return x.id==id;}); if(i>=0){ a[i].correo=d.correo; a[i].contrasena=d.contrasena; a[i].vencimiento=d.vencimiento; } this.s('cuentas',a); return{ok:true}; },
+  async updPerfilPin(id,pin){ var ps=this.g('perfiles'); var p=ps.find(function(x){return x.id==id;}); if(p) p.pin=pin; this.s('perfiles',ps); return{ok:true}; },
+  async asignar(id,wa,ven,cd,nom){ var ps=this.g('perfiles'); var p=ps.find(function(x){return x.id==id;}); if(p){ p.asignado=true; p.cliente_wa=wa; p.vencimiento=ven; } this.s('perfiles',ps); if(wa){ var cid='CA-'+id; var cs=this.g('cli'); var row={id:cid,servicio:(cd&&cd.svc)||'Netflix',nombre:nom||wa,telefono:wa.replace(/\D/g,''),correo:(cd&&cd.cor)||'',contrasena:(cd&&cd.pas)||'',perfil:String((cd&&cd.num)||''),pin:(cd&&cd.pin)||'',vencimiento:ven||''}; var ix=cs.findIndex(function(c){return c.id===cid;}); if(ix>=0) cs[ix]=Object.assign({},cs[ix],row); else cs.unshift(row); this.s('cli',cs); } return{ok:true}; },
+  async liberar(id){ var ps=this.g('perfiles'); var p=ps.find(function(x){return x.id==id;}); if(p){ p.asignado=false; p.cliente_wa=''; p.vencimiento=''; } this.s('perfiles',ps); this.s('cli',this.g('cli').filter(function(c){return c.id!=='CA-'+id;})); return{ok:true}; }
 };
 
-function ns(v) { return (v === null || v === undefined) ? '' : String(v); }
+/* ════════════════════════════════════════
+   UTILS
+════════════════════════════════════════ */
+function ns(v){ return (v===null||v===undefined)?'':String(v); }
+function normC(c){ return {id:ns(c.id),servicio:ns(c.servicio),nombre:ns(c.nombre),telefono:ns(c.telefono),correo:ns(c.correo),contrasena:ns(c.contrasena),perfil:ns(c.perfil),pin:ns(c.pin),vencimiento:ns(c.vencimiento)}; }
+function normP(p){ return {id:ns(p.id),cuentaId:ns(p.cuenta_id||p.cuentaId),numero:ns(p.numero),pin:ns(p.pin),asignado:p.asignado===true||p.asignado==='true',clienteWA:ns(p.cliente_wa||p.clienteWA),vencimiento:ns(p.vencimiento)}; }
 
-function normC(c) {
-  return { id: ns(c.id), servicio: ns(c.servicio), nombre: ns(c.nombre), telefono: ns(c.telefono), correo: ns(c.correo), contrasena: ns(c.contrasena), perfil: ns(c.perfil), pin: ns(c.pin), vencimiento: ns(c.vencimiento) };
-}
-
-function normP(p) {
-  return { id: ns(p.id), cuentaId: ns(p.cuenta_id || p.cuentaId), numero: ns(p.numero), pin: ns(p.pin), asignado: p.asignado === true || p.asignado === 'true', clienteWA: ns(p.cliente_wa || p.clienteWA), vencimiento: ns(p.vencimiento) };
-}
-
-async function reload() {
+async function reload(){
   var btn = document.getElementById('rBtn');
-  btn.classList.add('sp0');
-  try {
-    log('reload type=' + CFG.type + ' conn=' + isConn());
+  if(btn) btn.classList.add('spin');
+  try{
     var r = await Promise.all([db().getCli(), db().getCuentas()]);
-    log('clientes raw: ' + JSON.stringify(r[0]));
     clientes = Array.isArray(r[0]) ? r[0].map(normC) : [];
-    cuentas = Array.isArray(r[1]) ? r[1].map(function(c) { return Object.assign({}, c, { perfiles: (c.perfiles || []).map(normP) }); }) : [];
-    log('clientes norm: ' + JSON.stringify(clientes));
+    cuentas  = Array.isArray(r[1]) ? r[1].map(function(c){ return Object.assign({},c,{perfiles:(c.perfiles||[]).map(normP)}); }) : [];
     renderCli(); renderCuentas();
-    toast('✅ ' + clientes.length + ' cliente(s) · ' + cuentas.length + ' cuenta(s)');
-  } catch(e) { toast('❌ ' + e.message); log('ERR: ' + e.message); }
-  setTimeout(function() { btn.classList.remove('sp0'); }, 500);
+    toast('✅ '+clientes.length+' cliente(s) · '+cuentas.length+' cuenta(s)');
+  }catch(e){ toast('❌ '+e.message); }
+  setTimeout(function(){ if(btn) btn.classList.remove('spin'); },500);
 }
 
-function est(v) {
-  if (!v || v === '') return 'activo';
-  try {
-    var h = new Date(); h.setHours(0, 0, 0, 0);
-    var s = String(v).trim();
-    var d = new Date(s.length === 10 ? s + 'T12:00:00' : s);
-    if (isNaN(d)) return 'activo';
-    var df = Math.ceil((d - h) / 86400000);
-    if (df < 0) return 'vencido';
-    if (df <= 5) return 'proximo';
+function est(v){
+  if(!v||v==='') return 'activo';
+  try{
+    var h=new Date(); h.setHours(0,0,0,0);
+    var s=String(v).trim();
+    var d=new Date(s.length===10?s+'T12:00:00':s);
+    if(isNaN(d)) return 'activo';
+    var df=Math.ceil((d-h)/86400000);
+    if(df<0) return 'vencido';
+    if(df<=5) return 'proximo';
     return 'activo';
-  } catch(e) { return 'activo'; }
+  }catch(e){ return 'activo'; }
 }
 
-function fmtD(v) {
-  if (!v || v === '') return '—';
-  try {
-    var s = String(v).trim();
-    var d = new Date(s.length === 10 ? s + 'T12:00:00' : s);
-    if (isNaN(d)) return v;
-    return d.toLocaleDateString('es-AR', { day: '2-digit', month: '2-digit', year: 'numeric' });
-  } catch(e) { return v; }
+function fmtD(v){
+  if(!v||v==='') return '—';
+  try{ var s=String(v).trim(); var d=new Date(s.length===10?s+'T12:00:00':s); if(isNaN(d)) return v; return d.toLocaleDateString('es-AR',{day:'2-digit',month:'2-digit',year:'numeric'}); }catch(e){ return v; }
 }
 
-function setTab(t) {
-  curTab = t;
-  document.getElementById('tAct').classList.toggle('on', t === 'activos');
-  document.getElementById('tPrx').classList.toggle('on', t === 'proximos');
-  document.getElementById('tVen').classList.toggle('on', t === 'vencidos');
-  renderCli();
-}
+function renderCli(){
+  var q = (document.getElementById('sQ')?document.getElementById('sQ').value||'':'').toLowerCase();
+  var nAll = clientes.length;
+  var nAct = clientes.filter(function(c){ return est(c.vencimiento)==='activo'; }).length;
+  var nPrx = clientes.filter(function(c){ return est(c.vencimiento)==='proximo'; }).length;
+  var nVen = clientes.filter(function(c){ return est(c.vencimiento)==='vencido'; }).length;
+  document.getElementById('nAll').textContent = nAll;
+  document.getElementById('nAct').textContent = nAct;
+  document.getElementById('nPrx').textContent = nPrx;
+  document.getElementById('nVen').textContent = nVen;
 
-function renderCli() {
-  var q = (document.getElementById('sQ').value || '').toLowerCase();
-  document.getElementById('nAct').textContent = clientes.filter(function(c) { return est(c.vencimiento) === 'activo'; }).length;
-  document.getElementById('nPrx').textContent = clientes.filter(function(c) { return est(c.vencimiento) === 'proximo'; }).length;
-  document.getElementById('nVen').textContent = clientes.filter(function(c) { return est(c.vencimiento) === 'vencido'; }).length;
-  var tm = { activos: 'activo', proximos: 'proximo', vencidos: 'vencido' };
-  var fil = clientes.filter(function(c) {
-    var m = !q || [c.nombre, c.telefono, c.correo].some(function(f) { return (f || '').toLowerCase().includes(q); });
-    return m && est(c.vencimiento) === tm[curTab];
+  var filterEst = {cli:null, act:'activo', prx:'proximo', ven:'vencido'}[curPTab];
+
+  var fil = clientes.filter(function(c){
+    var mq = !q || [c.nombre,c.telefono,c.correo].some(function(f){ return (f||'').toLowerCase().includes(q); });
+    var me = filterEst ? est(c.vencimiento)===filterEst : true;
+    return mq && me;
   });
+
   var el = document.getElementById('cliList');
-  if (!fil.length) {
-    var ico = curTab === 'activos' ? '✅' : curTab === 'proximos' ? '⏰' : '⛔';
-    el.innerHTML = '<div class="empty"><div class="ei">' + ico + '</div><div class="et">Sin clientes aquí</div><div class="es">Usá el botón + para agregar</div></div>';
+  if(!el) return;
+  if(!fil.length){
+    var ico = curPTab==='act'?'✅':curPTab==='prx'?'⏰':curPTab==='ven'?'⛔':'📋';
+    el.innerHTML='<div class="empty"><div class="ei">'+ico+'</div><div class="et">Sin clientes aquí</div><div class="es">Usá el + para agregar</div></div>';
     return;
   }
-  el.innerHTML = fil.map(function(c) {
-    var e = est(c.vencimiento);
-    var bc = e === 'vencido' ? 'bv' : e === 'proximo' ? 'bp' : 'ba';
-    var bl = e === 'vencido' ? '⛔ VENCIDO' : e === 'proximo' ? '⏰ POR VENCER' : '✅ ACTIVO';
-    var sp = (c.servicio || '') + (c.perfil ? ' · Perfil ' + c.perfil : '');
-    return '<div class="card ' + e + '">' +
-      '<span class="badge ' + bc + '">' + bl + '</span>' +
-      '<div class="ct"><div><div class="cn">' + (c.nombre || '—') + '</div><div class="cs">' + sp + '</div></div><div class="ci">' + (c.id || '').slice(0, 10) + '</div></div>' +
-      '<div class="cg">' +
-        '<div class="cf"><div class="cfl">📱 Teléfono</div><div class="cfv">' + (c.telefono || '—') + '</div></div>' +
-        '<div class="cf"><div class="cfl">📧 Correo</div><div class="cfv">' + (c.correo || '—') + '</div></div>' +
-        '<div class="cf"><div class="cfl">🔑 Contraseña</div><div class="cfv">' + (c.contrasena || '—') + '</div></div>' +
-        '<div class="cf"><div class="cfl">👤 Perfil</div><div class="cfv">' + (c.perfil || '—') + '</div></div>' +
-        '<div class="cf"><div class="cfl">🔢 PIN</div><div class="cfv">' + (c.pin || '—') + '</div></div>' +
-        '<div class="cf"><div class="cfl">📅 Vencimiento</div><div class="cfv">' + fmtD(c.vencimiento) + '</div></div>' +
-      '</div>' +
-      '<div class="cbtns">' +
-        '<button class="cb re" onclick="renCli(\'' + c.id + '\')">🔄 Renovar 1 mes</button>' +
-        '<button class="cb wh" onclick="envWA(\'' + c.id + '\')">💬 WhatsApp</button>' +
-        '<button class="cb ed" onclick="editCli(\'' + c.id + '\')">✏️ Editar</button>' +
-        '<button class="cb dl" onclick="delCli(\'' + c.id + '\')">🗑️ Eliminar</button>' +
-      '</div></div>';
+  el.innerHTML = fil.map(function(c){
+    var e=est(c.vencimiento);
+    var bc=e==='vencido'?'bv':e==='proximo'?'bp':'ba';
+    var bl=e==='vencido'?'⛔ VENCIDO':e==='proximo'?'⏰ POR VENCER':'✅ ACTIVO';
+    var sp=(c.servicio||'')+(c.perfil?' · Perfil '+c.perfil:'');
+    return '<div class="card '+e+'">'+
+      '<span class="badge '+bc+'">'+bl+'</span>'+
+      '<div class="ct"><div><div class="cn">'+(c.nombre||'—')+'</div><div class="cs">'+sp+'</div></div><div class="ci">'+((c.id||'').slice(0,10))+'</div></div>'+
+      '<div class="cg">'+
+        '<div class="cf"><div class="cfl">📱 Teléfono</div><div class="cfv">'+(c.telefono||'—')+'</div></div>'+
+        '<div class="cf"><div class="cfl">📧 Correo</div><div class="cfv">'+(c.correo||'—')+'</div></div>'+
+        '<div class="cf"><div class="cfl">🔑 Contraseña</div><div class="cfv">'+(c.contrasena||'—')+'</div></div>'+
+        '<div class="cf"><div class="cfl">👤 Perfil</div><div class="cfv">'+(c.perfil||'—')+'</div></div>'+
+        '<div class="cf"><div class="cfl">🔢 PIN</div><div class="cfv">'+(c.pin||'—')+'</div></div>'+
+        '<div class="cf"><div class="cfl">📅 Vencimiento</div><div class="cfv">'+fmtD(c.vencimiento)+'</div></div>'+
+      '</div>'+
+      '<div class="cbtns">'+
+        '<button class="cb re" onclick="renCli(\''+c.id+'\')">🔄 Renovar 1 mes</button>'+
+        '<button class="cb wh" onclick="envWA(\''+c.id+'\')">💬 WhatsApp cliente</button>'+
+        '<button class="cb ed" onclick="editCli(\''+c.id+'\')">✏️ Editar</button>'+
+        '<button class="cb dl" onclick="delCli(\''+c.id+'\')">🗑️ Eliminar</button>'+
+      '</div>'+
+      '<div style="padding:0 0 2px;margin-top:8px">'+
+        '<button class="cb" style="width:100%;background:#25d36618;color:#25d366;border-color:#25d36650;gap:6px" onclick="renovarProveedor(\''+c.id+'\')">'+
+          '🔑 Renovar al proveedor'+
+        '</button>'+
+      '</div>'+
+      '</div>';
   }).join('');
 }
 
-async function saveCli() {
-  var id = document.getElementById('eId').value;
-  var d = { servicio: document.getElementById('fSvc').value, nombre: document.getElementById('fNom').value.trim(), telefono: document.getElementById('fTel').value.trim(), correo: document.getElementById('fCor').value.trim(), contrasena: document.getElementById('fPas').value.trim(), perfil: document.getElementById('fPer').value.trim(), pin: document.getElementById('fPin').value.trim(), vencimiento: document.getElementById('fVen').value };
-  if (!d.nombre) { toast('⚠️ El nombre es obligatorio'); return; }
-  try {
-    if (id) { await db().updCli(Object.assign({ id: id }, d)); toast('✅ Cliente actualizado'); }
-    else { await db().addCli(d); toast('✅ Cliente agregado'); }
-    closeM('mCli'); await reload();
-  } catch(e) { toast('❌ ' + e.message); }
+async function saveCli(){
+  var id=document.getElementById('eId').value;
+  var d={servicio:document.getElementById('fSvc').value,nombre:document.getElementById('fNom').value.trim(),telefono:document.getElementById('fTel').value.trim(),correo:document.getElementById('fCor').value.trim(),contrasena:document.getElementById('fPas').value.trim(),perfil:document.getElementById('fPer').value.trim(),pin:document.getElementById('fPin').value.trim(),vencimiento:document.getElementById('fVen').value};
+  if(!d.nombre){ toast('⚠️ El nombre es obligatorio'); return; }
+  try{ if(id){ await db().updCli(Object.assign({id:id},d)); toast('✅ Cliente actualizado'); } else{ await db().addCli(d); toast('✅ Cliente agregado'); } closeM('mCli'); await reload(); }catch(e){ toast('❌ '+e.message); }
 }
-
-async function renCli(id) {
-  try { await db().renCli(id); toast('🔄 Renovado +1 mes'); await reload(); } catch(e) { toast('❌ ' + e.message); }
-}
-
-async function delCli(id) {
-  if (!confirm('¿Eliminar este cliente?')) return;
-  try { await db().delCli(id); toast('🗑️ Eliminado'); await reload(); } catch(e) { toast('❌ ' + e.message); }
-}
-
-function editCli(id) {
-  var c = clientes.find(function(x) { return x.id === id; });
-  if (!c) return;
-  document.getElementById('eId').value = c.id;
-  document.getElementById('fSvc').value = c.servicio || 'Netflix';
-  document.getElementById('fNom').value = c.nombre || '';
-  document.getElementById('fTel').value = c.telefono || '';
-  document.getElementById('fCor').value = c.correo || '';
-  document.getElementById('fPas').value = c.contrasena || '';
-  document.getElementById('fPer').value = c.perfil || '';
-  document.getElementById('fPin').value = c.pin || '';
-  document.getElementById('fVen').value = c.vencimiento || '';
-  document.getElementById('extTxt').value = '';
-  document.getElementById('mCliT').textContent = 'Editar Cliente';
-  openM('mCli');
-}
-
-function envWA(id) {
-  var c = clientes.find(function(x) { return x.id === id; });
-  if (!c || !c.telefono) { toast('⚠️ Sin número de WhatsApp'); return; }
-  var e = est(c.vencimiento);
-  var el = e === 'vencido' ? '⛔ VENCIDO' : e === 'proximo' ? '⏰ Próximo a vencer' : '✅ Activo';
-  var msg = 'Hola ' + (c.nombre || '') + '! 👋\n\n' +
-    '📺 *Servicio:* ' + (c.servicio || '—') + ' — Perfil ' + (c.perfil || '?') + '\n' +
+async function renCli(id){ try{ await db().renCli(id); toast('🔄 Renovado +1 mes'); await reload(); }catch(e){ toast('❌ '+e.message); } }
+async function delCli(id){ if(!confirm('¿Eliminar este cliente?')) return; try{ await db().delCli(id); toast('🗑️ Eliminado'); await reload(); }catch(e){ toast('❌ '+e.message); } }
+function editCli(id){ var c=clientes.find(function(x){return x.id===id;}); if(!c) return; document.getElementById('eId').value=c.id; document.getElementById('fSvc').value=c.servicio||'Netflix'; document.getElementById('fNom').value=c.nombre||''; document.getElementById('fTel').value=c.telefono||''; document.getElementById('fCor').value=c.correo||''; document.getElementById('fPas').value=c.contrasena||''; document.getElementById('fPer').value=c.perfil||''; document.getElementById('fPin').value=c.pin||''; document.getElementById('fVen').value=c.vencimiento||''; document.getElementById('extTxt').value=''; document.getElementById('mCliT').textContent='Editar Cliente'; openM('mCli'); }
+function renovarProveedor(id){
+  var c = clientes.find(function(x){ return x.id === id; });
+  if(!c){ toast('⚠️ Cliente no encontrado'); return; }
+  var msg =
+    'Hola Rodrigo, quiero renovar una cuenta 🔄\n\n' +
     '📧 *Correo:* ' + (c.correo || '—') + '\n' +
     '🔑 *Contraseña:* ' + (c.contrasena || '—') + '\n' +
     '🔢 *PIN:* ' + (c.pin || '—') + '\n' +
-    '📅 *Vencimiento:* ' + fmtD(c.vencimiento) + '\n' +
-    '📌 *Estado:* ' + el + '\n\n_MISAKROOS_ 🚀';
-  window.open('https://wa.me/' + c.telefono.replace(/\D/g, '') + '?text=' + encodeURIComponent(msg), '_blank');
+    '📅 *Vencimiento actual:* ' + fmtD(c.vencimiento);
+  window.open('https://wa.me/' + WA + '?text=' + encodeURIComponent(msg), '_blank');
 }
+function envWA(id){ var c=clientes.find(function(x){return x.id===id;}); if(!c||!c.telefono){ toast('⚠️ Sin número de WhatsApp'); return; } var e=est(c.vencimiento); var el=e==='vencido'?'⛔ VENCIDO':e==='proximo'?'⏰ Próximo a vencer':'✅ Activo'; var msg='Hola '+(c.nombre||'')+'! 👋\n\n📺 *Servicio:* '+(c.servicio||'—')+' — Perfil '+(c.perfil||'?')+'\n📧 *Correo:* '+(c.correo||'—')+'\n🔑 *Contraseña:* '+(c.contrasena||'—')+'\n🔢 *PIN:* '+(c.pin||'—')+'\n📅 *Vencimiento:* '+fmtD(c.vencimiento)+'\n📌 *Estado:* '+el+'\n\n_MISAKROOS_ 🚀'; window.open('https://wa.me/'+c.telefono.replace(/\D/g,'')+'?text='+encodeURIComponent(msg),'_blank'); }
 
-function renderCuentas() {
-  var el = document.getElementById('cuentaList');
-  if (!cuentas.length) {
-    el.innerHTML = '<div class="empty"><div class="ei">📺</div><div class="et">Sin cuentas</div><div class="es">Agregá una cuenta de Netflix</div></div>';
-    return;
-  }
-  el.innerHTML = cuentas.map(function(c, i) {
-    var ps = c.perfiles || [];
-    var an = ps.filter(function(p) { return p.asignado; }).length;
-    var ph = ps.map(function(p) {
-      var wl = p.asignado ? (p.clienteWA || 'Sin WA') + (p.vencimiento ? ' · 📅 ' + fmtD(p.vencimiento) : '') : 'Sin asignar';
-      var bc = p.asignado ? 'a' : 'l';
-      var bt = p.asignado ? 'Reasignar' : 'Asignar';
-      var ba = p.asignado ? 'liberarP(\'' + p.id + '\')' : 'abrirAsig(\'' + p.id + '\')';
-      return '<div class="pr"><div class="pn ' + (p.asignado ? 'a' : '') + '">' + p.numero + '</div><div class="pi"><div class="pp">PIN: ' + (p.pin || '—') + '</div><div class="pw ' + bc + '">' + wl + '</div></div><button class="bas ' + bc + '" onclick="' + ba + '">' + bt + '</button></div>';
-    }).join('');
-    return '<div class="nc"><div class="nh"><div class="nht">📺 Cuenta #' + (i + 1) + '</div><div class="nid">' + (c.id || '').slice(0, 12) + '</div></div>' +
-      '<div class="nb"><div class="ni">' +
-        '<div class="cf"><div class="cfl">📧 Correo</div><div class="cfv" style="font-size:.71rem">' + (c.correo || '—') + '</div></div>' +
-        '<div class="cf"><div class="cfl">🔑 Contraseña</div><div class="cfv" style="font-size:.71rem">' + (c.contrasena || '—') + '</div></div>' +
-        '<div class="cf"><div class="cfl">📅 Renovación</div><div class="cfv" style="font-size:.71rem">' + fmtD(c.vencimiento) + '</div></div>' +
-        '<div class="cf"><div class="cfl">👥 Asignados</div><div class="cfv" style="font-size:.71rem">' + an + '/' + ps.length + '</div></div>' +
-      '</div><div class="pt">PERFILES</div>' + ph + '</div>' +
-      '<div class="na"><button class="cb ed" style="flex:1" onclick="editCuenta(\'' + c.id + '\')">✏️ Editar</button><button class="cb dl" style="flex:1" onclick="delCuenta(\'' + c.id + '\')">🗑️ Eliminar</button></div></div>';
+function renderCuentas(){
+  var el=document.getElementById('cuentaList');
+  if(!el) return;
+  if(!cuentas.length){ el.innerHTML='<div class="empty"><div class="ei">📺</div><div class="et">Sin cuentas</div><div class="es">Agregá una cuenta de Netflix</div></div>'; return; }
+  el.innerHTML=cuentas.map(function(c,i){
+    var ps=c.perfiles||[];
+    var an=ps.filter(function(p){return p.asignado;}).length;
+    var ph=ps.map(function(p){ var wl=p.asignado?(p.clienteWA||'Sin WA')+(p.vencimiento?' · 📅 '+fmtD(p.vencimiento):''):'Sin asignar'; var bc=p.asignado?'a':'l'; var bt=p.asignado?'Reasignar':'Asignar'; var ba=p.asignado?'liberarP(\''+p.id+'\')':'abrirAsig(\''+p.id+'\')'; return '<div class="pr"><div class="pn '+(p.asignado?'a':'')+'">'+(p.numero)+'</div><div class="pi"><div class="pp">PIN: '+(p.pin||'—')+'</div><div class="pw '+bc+'">'+wl+'</div></div><button class="bas '+bc+'" onclick="'+ba+'">'+bt+'</button></div>'; }).join('');
+    return '<div class="nc"><div class="nh"><div class="nht">📺 Cuenta #'+(i+1)+'</div><div class="nid">'+((c.id||'').slice(0,12))+'</div></div>'+
+      '<div class="nb"><div class="ni">'+
+        '<div class="cf"><div class="cfl">📧 Correo</div><div class="cfv" style="font-size:.71rem">'+(c.correo||'—')+'</div></div>'+
+        '<div class="cf"><div class="cfl">🔑 Contraseña</div><div class="cfv" style="font-size:.71rem">'+(c.contrasena||'—')+'</div></div>'+
+        '<div class="cf"><div class="cfl">📅 Renovación</div><div class="cfv" style="font-size:.71rem">'+fmtD(c.vencimiento)+'</div></div>'+
+        '<div class="cf"><div class="cfl">👥 Asignados</div><div class="cfv" style="font-size:.71rem">'+an+'/'+ps.length+'</div></div>'+
+      '</div><div class="pt">PERFILES</div>'+ph+'</div>'+
+      '<div class="na"><button class="cb ed" style="flex:1" onclick="editCuenta(\''+c.id+'\')">✏️ Editar</button><button class="cb dl" style="flex:1" onclick="delCuenta(\''+c.id+'\')">🗑️ Eliminar</button></div></div>';
   }).join('');
 }
 
-function buildPfForm() {
-  document.getElementById('pfForm').innerHTML = [0,1,2,3,4].map(function(i) {
-    return '<div class="pfr"><div class="pfl">' + (i + 1) + '</div><input type="text" class="fi" id="pfN' + i + '" placeholder="Perfil ' + (i + 1) + '"><input type="text" class="fi" id="pfP' + i + '" placeholder="PIN"></div>';
-  }).join('');
-}
+function buildPfForm(ep){ ep=ep||[]; document.getElementById('pfForm').innerHTML=[0,1,2,3,4].map(function(i){ var e=ep[i]||{}; return '<div class="pfr"><div class="pfl">'+(i+1)+'</div><input type="text" class="fi" id="pfN'+i+'" placeholder="Perfil '+(i+1)+'" value="'+(e.nombre||e.name||'')+'"><input type="text" class="fi" id="pfP'+i+'" placeholder="PIN" value="'+(e.pin||'')+'"></div>'; }).join(''); }
+function openMCuenta(){ document.getElementById('eCuId').value=''; document.getElementById('cuCor').value=''; document.getElementById('cuPas').value=''; document.getElementById('cuVen').value=''; document.getElementById('mCuTit').textContent='Nueva Cuenta Netflix'; buildPfForm([]); openM('mCuenta'); }
+async function saveCuenta(){ var id=document.getElementById('eCuId').value; var d={correo:document.getElementById('cuCor').value.trim(),contrasena:document.getElementById('cuPas').value.trim(),vencimiento:document.getElementById('cuVen').value}; var perfs=[0,1,2,3,4].map(function(i){ return{nombre:(document.getElementById('pfN'+i)||{}).value||'',pin:(document.getElementById('pfP'+i)||{}).value||''}; }); try{ if(id){ await db().updCuenta(id,d); var cu=cuentas.find(function(x){return x.id===id;}); if(cu&&cu.perfiles) for(var i=0;i<cu.perfiles.length;i++){ var np=perfs[i]?perfs[i].pin:''; if(np!==cu.perfiles[i].pin) await db().updPerfilPin(cu.perfiles[i].id,np); } toast('✅ Cuenta actualizada'); } else{ await db().addCuenta(d,perfs); toast('✅ Cuenta creada'); } closeM('mCuenta'); await reload(); }catch(e){ toast('❌ '+e.message); } }
+function editCuenta(id){ var c=cuentas.find(function(x){return x.id===id;}); if(!c) return; document.getElementById('eCuId').value=c.id; document.getElementById('cuCor').value=c.correo||''; document.getElementById('cuPas').value=c.contrasena||''; document.getElementById('cuVen').value=c.vencimiento||''; document.getElementById('mCuTit').textContent='Editar Cuenta Netflix'; var ps=(c.perfiles||[]).map(function(p){return{nombre:'Perfil '+p.numero,pin:p.pin||''};}); buildPfForm(ps); openM('mCuenta'); }
+async function delCuenta(id){ if(!confirm('¿Eliminar esta cuenta y todos sus perfiles?')) return; try{ await db().delCuenta(id); toast('🗑️ Cuenta eliminada'); await reload(); }catch(e){ toast('❌ '+e.message); } }
+function abrirAsig(id){ document.getElementById('asId').value=id; document.getElementById('asNom').value=''; document.getElementById('asWA').value=''; document.getElementById('asVen').value=''; openM('mAsig'); }
+async function confAsig(){ var id=document.getElementById('asId').value; var wa=document.getElementById('asWA').value.trim(); var ven=document.getElementById('asVen').value; var nom=document.getElementById('asNom').value.trim(); if(!wa){ toast('⚠️ Ingresá el WhatsApp'); return; } var cd=null; for(var i=0;i<cuentas.length;i++){ var cu=cuentas[i]; var ps=cu.perfiles||[]; for(var j=0;j<ps.length;j++){ if(String(ps[j].id)===String(id)){ cd={svc:cu.servicio||'Netflix',cor:cu.correo||'',pas:cu.contrasena||'',num:ps[j].numero,pin:ps[j].pin||''}; break; } } if(cd) break; } try{ await db().asignar(id,wa,ven,cd,nom); toast('✅ Perfil asignado · Cliente creado'); closeM('mAsig'); await reload(); }catch(e){ toast('❌ '+e.message); } }
+async function liberarP(id){ if(!confirm('¿Liberar este perfil? Se eliminará el cliente asociado.')) return; try{ await db().liberar(id); toast('🔓 Perfil liberado'); await reload(); }catch(e){ toast('❌ '+e.message); } }
 
-function openMCuenta() {
-  document.getElementById('eCuId').value = '';
-  document.getElementById('cuCor').value = '';
-  document.getElementById('cuPas').value = '';
-  document.getElementById('cuVen').value = '';
-  buildPfForm(); openM('mCuenta');
-}
-
-async function saveCuenta() {
-  var d = { correo: document.getElementById('cuCor').value.trim(), contrasena: document.getElementById('cuPas').value.trim(), vencimiento: document.getElementById('cuVen').value };
-  var perfs = [0,1,2,3,4].map(function(i) { return { nombre: (document.getElementById('pfN' + i) || {}).value || '', pin: (document.getElementById('pfP' + i) || {}).value || '' }; });
-  try { await db().addCuenta(d, perfs); toast('✅ Cuenta guardada'); closeM('mCuenta'); await reload(); }
-  catch(e) { toast('❌ ' + e.message); }
-}
-
-function editCuenta(id) {
-  var c = cuentas.find(function(x) { return x.id === id; });
-  if (!c) return;
-  document.getElementById('eCuId').value = c.id;
-  document.getElementById('cuCor').value = c.correo || '';
-  document.getElementById('cuPas').value = c.contrasena || '';
-  document.getElementById('cuVen').value = c.vencimiento || '';
-  buildPfForm(); openM('mCuenta');
-}
-
-async function delCuenta(id) {
-  if (!confirm('¿Eliminar esta cuenta y todos sus perfiles?')) return;
-  try { await db().delCuenta(id); toast('🗑️ Cuenta eliminada'); await reload(); } catch(e) { toast('❌ ' + e.message); }
-}
-
-function abrirAsig(id) {
-  document.getElementById('asId').value = id;
-  document.getElementById('asNom').value = '';
-  document.getElementById('asWA').value = '';
-  document.getElementById('asVen').value = '';
-  openM('mAsig');
-}
-
-async function confAsig() {
-  var id = document.getElementById('asId').value;
-  var wa = document.getElementById('asWA').value.trim();
-  var ven = document.getElementById('asVen').value;
-  var nom = document.getElementById('asNom').value.trim();
-  if (!wa) { toast('⚠️ Ingresá el WhatsApp'); return; }
-  var cd = null;
-  for (var i = 0; i < cuentas.length; i++) {
-    var cu = cuentas[i]; var ps = cu.perfiles || [];
-    for (var j = 0; j < ps.length; j++) {
-      if (String(ps[j].id) === String(id)) {
-        cd = { svc: cu.servicio || 'Netflix', cor: cu.correo || '', pas: cu.contrasena || '', num: ps[j].numero, pin: ps[j].pin || '' };
-        break;
-      }
-    }
-    if (cd) break;
-  }
-  try {
-    await db().asignar(id, wa, ven, cd, nom);
-    toast('✅ Perfil asignado · Cliente creado'); closeM('mAsig'); await reload();
-  } catch(e) { toast('❌ ' + e.message); }
-}
-
-async function liberarP(id) {
-  if (!confirm('¿Liberar este perfil? Se eliminará el cliente asociado.')) return;
-  try { await db().liberar(id); toast('🔓 Perfil liberado'); await reload(); } catch(e) { toast('❌ ' + e.message); }
-}
-
-async function extraer() {
-  var txt = document.getElementById('extTxt').value.trim();
-  if (!txt) { toast('⚠️ Pegá el texto primero'); return; }
-  var btn = document.getElementById('extBtn');
-  btn.innerHTML = '<span class="spi"></span> Extrayendo...'; btn.disabled = true;
-  try {
-    var res = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ model: 'claude-sonnet-4-20250514', max_tokens: 500,
-        system: 'Extractor de datos de streaming. Respondé SOLO con JSON válido sin backticks: {"servicio":"","nombre":"","telefono":"solo digitos con codigo pais","correo":"","contrasena":"","perfil":"","pin":"","vencimiento":"YYYY-MM-DD"}. Si un campo no existe, string vacío.',
-        messages: [{ role: 'user', content: txt }] })
-    });
-    var data = await res.json();
-    var raw = (data.content && data.content[0] && data.content[0].text) || '{}';
-    var ext = JSON.parse(raw.replace(/```json|```/g, '').trim());
-    if (ext.servicio) document.getElementById('fSvc').value = ext.servicio;
-    if (ext.nombre) document.getElementById('fNom').value = ext.nombre;
-    if (ext.telefono) document.getElementById('fTel').value = ext.telefono;
-    if (ext.correo) document.getElementById('fCor').value = ext.correo;
-    if (ext.contrasena) document.getElementById('fPas').value = ext.contrasena;
-    if (ext.perfil) document.getElementById('fPer').value = ext.perfil;
-    if (ext.pin) document.getElementById('fPin').value = ext.pin;
-    if (ext.vencimiento) document.getElementById('fVen').value = ext.vencimiento;
+async function extraer(){
+  var txt=document.getElementById('extTxt').value.trim();
+  if(!txt){ toast('⚠️ Pegá el texto primero'); return; }
+  var btn=document.getElementById('extBtn');
+  btn.innerHTML='<span class="spi"></span> Extrayendo...'; btn.disabled=true;
+  try{
+    var res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:500,system:'Extractor de datos de streaming. Respondé SOLO con JSON válido sin backticks: {"servicio":"","nombre":"","telefono":"solo digitos con codigo pais","correo":"","contrasena":"","perfil":"","pin":"","vencimiento":"YYYY-MM-DD"}. Si un campo no existe, string vacío.',messages:[{role:'user',content:txt}]})});
+    var data=await res.json();
+    var raw=(data.content&&data.content[0]&&data.content[0].text)||'{}';
+    var ext=JSON.parse(raw.replace(/```json|```/g,'').trim());
+    if(ext.servicio) document.getElementById('fSvc').value=ext.servicio;
+    if(ext.nombre) document.getElementById('fNom').value=ext.nombre;
+    if(ext.telefono) document.getElementById('fTel').value=ext.telefono;
+    if(ext.correo) document.getElementById('fCor').value=ext.correo;
+    if(ext.contrasena) document.getElementById('fPas').value=ext.contrasena;
+    if(ext.perfil) document.getElementById('fPer').value=ext.perfil;
+    if(ext.pin) document.getElementById('fPin').value=ext.pin;
+    if(ext.vencimiento) document.getElementById('fVen').value=ext.vencimiento;
     toast('✨ ¡Datos extraídos!');
-  } catch(e) { toast('❌ Error al extraer'); }
-  btn.innerHTML = '✨ Extraer datos automáticamente'; btn.disabled = false;
+  }catch(e){ toast('❌ Error al extraer'); }
+  btn.innerHTML='✨ Extraer datos automáticamente'; btn.disabled=false;
 }
 
-function openMCli() {
-  document.getElementById('eId').value = '';
-  document.getElementById('mCliT').textContent = 'Nuevo Cliente';
-  document.getElementById('fSvc').value = 'Netflix';
-  ['fNom','fTel','fCor','fPas','fPer','fPin','fVen','extTxt'].forEach(function(id) { document.getElementById(id).value = ''; });
-  openM('mCli');
-}
+function openMCli(){ document.getElementById('eId').value=''; document.getElementById('mCliT').textContent='Nuevo Cliente'; document.getElementById('fSvc').value='Netflix'; ['fNom','fTel','fCor','fPas','fPer','fPin','fVen','extTxt'].forEach(function(id){ document.getElementById(id).value=''; }); openM('mCli'); }
+function openM(id){ document.getElementById(id).classList.add('open'); }
+function closeM(id){ document.getElementById(id).classList.remove('open'); }
 
-function openM(id) { document.getElementById(id).classList.add('open'); }
-function closeM(id) { document.getElementById(id).classList.remove('open'); }
-
-document.querySelectorAll('.ov').forEach(function(o) {
-  o.addEventListener('click', function(e) { if (e.target === o) o.classList.remove('open'); });
+document.querySelectorAll('.ov').forEach(function(o){
+  o.addEventListener('click',function(e){ if(e.target===o) o.classList.remove('open'); });
 });
 
-function toast(msg) {
-  var el = document.getElementById('toast');
-  el.textContent = msg; el.classList.add('on');
-  clearTimeout(_tt); _tt = setTimeout(function() { el.classList.remove('on'); }, 2600);
-}
+function toast(msg){ var el=document.getElementById('toast'); el.textContent=msg; el.classList.add('on'); clearTimeout(_tt); _tt=setTimeout(function(){ el.classList.remove('on'); },2600); }
 
-showV('clientes');
-init();
+/* INIT */
+(function init(){
+  selDB(selDbT);
+  updPill();
+  chkBanner();
+  if(isConn()){ db().getCli().then(function(r){ clientes=Array.isArray(r)?r.map(normC):[]; renderCli(); }); db().getCuentas().then(function(r){ cuentas=Array.isArray(r)?r.map(function(c){return Object.assign({},c,{perfiles:(c.perfiles||[]).map(normP)});}):[];renderCuentas(); }); }
+  else { renderCli(); renderCuentas(); }
+  buildPfForm([]);
+})();
 </script>
-
 </body>
 </html>
