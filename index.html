@@ -1090,9 +1090,32 @@ const DB = {
     }
   },
 
-  async asignarPerfil(id, wa, venc) {
+  async asignarPerfil(id, wa, venc, cuentaData) {
     if (CFG.type === 'supabase') {
       await sbFetch('perfiles?id=eq.'+id, 'PATCH', { asignado:true, cliente_wa:wa, vencimiento:venc });
+      // Auto-crear cliente en tabla clientes si tiene WA
+      if (wa && cuentaData) {
+        const clienteId = 'CA' + id;
+        // Verificar si ya existe
+        const existing = await sbFetch('clientes?id=eq.'+clienteId);
+        const clienteRow = {
+          id: clienteId,
+          servicio: cuentaData.servicio || 'Netflix',
+          nombre: wa,
+          telefono: wa,
+          correo: cuentaData.correo || '',
+          contrasena: cuentaData.contrasena || '',
+          perfil: String(cuentaData.numPerfil || ''),
+          pin: cuentaData.pin || '',
+          vencimiento: venc || '',
+          creado: new Date().toISOString()
+        };
+        if (existing.length === 0) {
+          await sbFetch('clientes', 'POST', clienteRow);
+        } else {
+          await sbFetch('clientes?id=eq.'+clienteId, 'PATCH', { vencimiento: venc, telefono: wa, nombre: wa });
+        }
+      }
       return { ok: true };
     } else {
       return gsFetch({ action:'asignarPerfil', id, clienteWA:wa, vencimiento:venc });
@@ -1102,6 +1125,8 @@ const DB = {
   async liberarPerfil(id) {
     if (CFG.type === 'supabase') {
       await sbFetch('perfiles?id=eq.'+id, 'PATCH', { asignado:false, cliente_wa:'', vencimiento:'' });
+      // Eliminar cliente auto-creado si existe
+      await sbFetch('clientes?id=eq.CA'+id, 'DELETE').catch(()=>{});
       return { ok: true };
     } else {
       return gsFetch({ action:'liberarPerfil', id });
@@ -1159,10 +1184,26 @@ const LOCAL = {
     this.set('perfiles', this.get('perfiles').filter(p=>p.cuenta_id!=id));
     return { ok:true };
   },
-  async asignarPerfil(id, wa, venc) {
+  async asignarPerfil(id, wa, venc, cuentaData) {
     const ps = this.get('perfiles'); const p=ps.find(p=>p.id==id);
     if (p) { p.asignado=true; p.cliente_wa=wa; p.vencimiento=venc; }
-    this.set('perfiles', ps); return { ok:true };
+    this.set('perfiles', ps);
+    // Auto-crear cliente local
+    if (wa && cuentaData) {
+      const clienteId = 'CA'+id;
+      const arr = this.get('clientes');
+      const existing = arr.find(c=>c.id===clienteId);
+      if (!existing) {
+        arr.unshift({ id:clienteId, servicio:cuentaData.servicio||'Netflix', nombre:wa, telefono:wa,
+          correo:cuentaData.correo||'', contrasena:cuentaData.contrasena||'',
+          perfil:String(cuentaData.numPerfil||''), pin:cuentaData.pin||'', vencimiento:venc||'' });
+        this.set('clientes', arr);
+      } else {
+        existing.vencimiento=venc; existing.telefono=wa; existing.nombre=wa;
+        this.set('clientes', arr);
+      }
+    }
+    return { ok:true };
   },
   async liberarPerfil(id) {
     const ps = this.get('perfiles'); const p=ps.find(p=>p.id==id);
@@ -1489,9 +1530,25 @@ async function confirmarAsignar() {
   const id   = document.getElementById('asigId').value;
   const wa   = document.getElementById('asigWA').value.trim();
   const venc = document.getElementById('asigVenc').value;
+  if (!wa) { toast('⚠️ Ingresá el WhatsApp del cliente'); return; }
+  // Find perfil data to pass cuenta info
+  let cuentaData = null;
+  for (const c of cuentas) {
+    const p = (c.perfiles||[]).find(p=>p.id===id||p.id==id);
+    if (p) {
+      cuentaData = {
+        servicio: c.servicio || 'Netflix',
+        correo: c.correo,
+        contrasena: c.contrasena,
+        numPerfil: p.numero,
+        pin: p.pin
+      };
+      break;
+    }
+  }
   try {
-    await db().asignarPerfil(id, wa, venc);
-    toast('✅ Perfil asignado');
+    await db().asignarPerfil(id, wa, venc, cuentaData);
+    toast('✅ Perfil asignado y cliente creado');
     closeModal('mAsignar');
     await reloadAll();
   } catch(e) { toast('❌ '+e.message); }
