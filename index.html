@@ -465,7 +465,10 @@ input[type="date"]{color-scheme:dark;}
 
 <!-- TOPBAR -->
 <div class="topbar">
-  <div class="logo">MISAKROOS</div>
+  <div style="display:flex;align-items:center;gap:8px">
+    <div class="logo" style="cursor:pointer" onclick="showView('clientes')">MISAKROOS</div>
+    <button class="btn-top" onclick="showView('clientes')" title="Inicio" style="padding:6px 10px;font-size:0.85rem">🏠</button>
+  </div>
   <div class="topbar-right">
     <div class="db-pill none" id="dbPill" onclick="showView('config')" title="Base de datos">
       <div class="db-dot"></div>
@@ -1158,16 +1161,17 @@ function db() { return isConnected() ? DB : LOCAL; }
 // ══════════════════════════════════════════════════════
 // Normalizar campo: Supabase usa snake_case, GSheets usa camelCase
 function norm(c) {
+  const s = v => (v === null || v === undefined) ? '' : String(v);
   return {
-    id: c.id,
-    servicio: c.servicio||'',
-    nombre: c.nombre||'',
-    telefono: c.telefono||'',
-    correo: c.correo||'',
-    contrasena: c.contrasena||'',
-    perfil: c.perfil||'',
-    pin: c.pin||'',
-    vencimiento: c.vencimiento||'',
+    id: s(c.id),
+    servicio: s(c.servicio),
+    nombre: s(c.nombre),
+    telefono: s(c.telefono),
+    correo: s(c.correo),
+    contrasena: s(c.contrasena),
+    perfil: s(c.perfil),
+    pin: s(c.pin),
+    vencimiento: s(c.vencimiento),
   };
 }
 
@@ -1191,13 +1195,17 @@ async function reloadAll() {
   btn.classList.add('spin');
   try {
     const [cs, cts] = await Promise.all([ db().getClientes(), db().getCuentas() ]);
-    clientes = (cs||[]).map(norm);
-    cuentas  = (cts||[]).map(c=>({ ...c, perfiles:(c.perfiles||[]).map(normPerfil) }));
+    console.log('Raw clientes from DB:', cs);
+    console.log('Raw cuentas from DB:', cts);
+    clientes = Array.isArray(cs) ? cs.map(norm) : [];
+    cuentas  = Array.isArray(cts) ? cts.map(c=>({ ...c, perfiles:(c.perfiles||[]).map(normPerfil) })) : [];
+    console.log('Normalized clientes:', clientes);
     renderClientes();
     renderCuentas();
+    if (clientes.length > 0) toast('✅ ' + clientes.length + ' cliente(s) cargado(s)');
   } catch(e) {
-    toast('❌ Error cargando datos');
-    console.error(e);
+    toast('❌ Error: ' + e.message);
+    console.error('reloadAll error:', e);
   }
   setTimeout(()=>btn.classList.remove('spin'), 500);
 }
@@ -1206,13 +1214,17 @@ async function reloadAll() {
 //  CLIENTES
 // ══════════════════════════════════════════════════════
 function estado(v) {
-  if (!v) return 'activo';
-  const hoy = new Date(); hoy.setHours(0,0,0,0);
-  const d   = new Date(v.includes('T') ? v : v+'T12:00:00');
-  const diff= Math.ceil((d-hoy)/86400000);
-  if (diff<0) return 'vencido';
-  if (diff<=5) return 'proximo';
-  return 'activo';
+  if (!v || v === '' || v === 'null' || v === 'undefined') return 'activo';
+  try {
+    const hoy = new Date(); hoy.setHours(0,0,0,0);
+    const str = String(v).trim();
+    const d   = new Date(str.includes('T') ? str : str + 'T12:00:00');
+    if (isNaN(d)) return 'activo';
+    const diff = Math.ceil((d - hoy) / 86400000);
+    if (diff < 0) return 'vencido';
+    if (diff <= 5) return 'proximo';
+    return 'activo';
+  } catch(e) { return 'activo'; }
 }
 
 function fmtDate(v) {
