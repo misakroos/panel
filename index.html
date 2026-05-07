@@ -476,6 +476,7 @@ input[type="date"]{color-scheme:dark;}
     </div>
     <button class="btn-top admin" onclick="showView('admin')">⚡ Admin</button>
     <button class="btn-top" onclick="showView('config')">⚙️</button>
+    <button class="btn-top" onclick="toggleDebug()" title="Diagnóstico" style="font-size:0.75rem;padding:5px 9px">🔍</button>
   </div>
 </div>
 
@@ -483,6 +484,9 @@ input[type="date"]{color-scheme:dark;}
 <div class="no-cfg hidden" id="noBanner" onclick="showView('config')">
   ⚠️ Sin base de datos configurada — tocá para configurar
 </div>
+
+<!-- DEBUG PANEL -->
+<div id="debugPanel" style="display:none;margin:8px 14px;background:#0a0a15;border:1px solid #7c3aed;border-radius:10px;padding:12px;font-family:monospace;font-size:0.7rem;color:#a78bfa;max-height:200px;overflow-y:auto;white-space:pre-wrap;word-break:break-all" id="debugPanel"></div>
 
 <!-- ════════════ VIEW: CLIENTES ════════════ -->
 <div id="vClientes">
@@ -958,19 +962,32 @@ async function sbFetch(path, method='GET', body=null) {
     'apikey': CFG.supaKey,
     'Authorization': 'Bearer ' + CFG.supaKey,
     'Content-Type': 'application/json',
+    'Accept': 'application/json',
   };
   if (method === 'POST')   headers['Prefer'] = 'return=representation';
   if (method === 'PATCH')  headers['Prefer'] = 'return=minimal';
   if (method === 'DELETE') headers['Prefer'] = 'return=minimal';
   const opts = { method, headers };
   if (body) opts.body = JSON.stringify(body);
-  const res = await fetch(CFG.supaUrl + '/rest/v1/' + path, opts);
-  if (res.status === 204) return [];
-  if (!res.ok) {
-    const err = await res.json().catch(()=>({}));
-    throw new Error(err.message || err.hint || ('HTTP ' + res.status));
-  }
+  
+  const fullUrl = CFG.supaUrl + '/rest/v1/' + path;
+  console.log('[SB]', method, fullUrl, body||'');
+  
+  let res;
+  try { res = await fetch(fullUrl, opts); }
+  catch(e) { throw new Error('Red: ' + e.message); }
+  
+  console.log('[SB] status:', res.status);
+  if (res.status === 204 || res.status === 205) return [];
+  
   const text = await res.text();
+  console.log('[SB] body:', text.slice(0,300));
+  
+  if (!res.ok) {
+    let msg = 'HTTP ' + res.status;
+    try { const j = JSON.parse(text); msg = j.message || j.hint || j.error || msg; } catch(e){}
+    throw new Error(msg);
+  }
   return text ? JSON.parse(text) : [];
 }
 
@@ -1190,22 +1207,37 @@ function normPerfil(p) {
 // ══════════════════════════════════════════════════════
 //  RELOAD
 // ══════════════════════════════════════════════════════
+let _debugVisible = false;
+function toggleDebug() {
+  _debugVisible = !_debugVisible;
+  document.getElementById('debugPanel').style.display = _debugVisible ? 'block' : 'none';
+}
+function dbLog(msg) {
+  console.log(msg);
+  const el = document.getElementById('debugPanel');
+  el.textContent += '\n' + (typeof msg === 'object' ? JSON.stringify(msg,null,2) : msg);
+  el.scrollTop = el.scrollHeight;
+}
+
 async function reloadAll() {
   const btn = document.getElementById('refreshBtn');
   btn.classList.add('spin');
   try {
+    dbLog('--- reloadAll() CFG.type=' + CFG.type + ' connected=' + isConnected());
     const [cs, cts] = await Promise.all([ db().getClientes(), db().getCuentas() ]);
-    console.log('Raw clientes from DB:', cs);
-    console.log('Raw cuentas from DB:', cts);
+    dbLog('clientes raw: ' + JSON.stringify(cs));
+    dbLog('cuentas raw (count): ' + (Array.isArray(cts) ? cts.length : typeof cts));
     clientes = Array.isArray(cs) ? cs.map(norm) : [];
     cuentas  = Array.isArray(cts) ? cts.map(c=>({ ...c, perfiles:(c.perfiles||[]).map(normPerfil) })) : [];
-    console.log('Normalized clientes:', clientes);
+    dbLog('clientes normalized: ' + JSON.stringify(clientes));
     renderClientes();
     renderCuentas();
-    if (clientes.length > 0) toast('✅ ' + clientes.length + ' cliente(s) cargado(s)');
+    const msg = '✅ ' + clientes.length + ' cliente(s) · ' + cuentas.length + ' cuenta(s)';
+    toast(msg);
+    dbLog(msg);
   } catch(e) {
-    toast('❌ Error: ' + e.message);
-    console.error('reloadAll error:', e);
+    toast('❌ ' + e.message);
+    dbLog('ERROR: ' + e.message + ' | ' + e.stack);
   }
   setTimeout(()=>btn.classList.remove('spin'), 500);
 }
