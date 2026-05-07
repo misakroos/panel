@@ -551,7 +551,7 @@ input[type="date"]{color-scheme:dark;}
         </div>
         <div class="cfg-step supabase">
           <div class="step-n">3</div>
-          <div class="step-txt">Pegá los datos abajo y tocá Conectar. La app crea las tablas automáticamente.</div>
+          <div class="step-txt">Pegá los datos abajo y tocá Conectar. Si es la primera vez, te mostramos el SQL para crear las tablas.</div>
         </div>
       </div>
 
@@ -566,8 +566,9 @@ input[type="date"]{color-scheme:dark;}
       <button class="btn-connect supabase" onclick="connectSupabase()">🟢 Conectar con Supabase</button>
 
       <div class="info-box">
-        🔐 Tu <b>anon key</b> es segura para usar en el frontend — Supabase la protege con Row Level Security.<br>
-        💾 Los datos se guardan en tablas <b>clientes</b>, <b>cuentas</b> y <b>perfiles</b> creadas automáticamente.
+        🔐 Tu <b>anon key</b> es segura para usar en el frontend.<br>
+        ⚠️ Primera vez: ejecutá el SQL que te mostramos en <b>Supabase → SQL Editor</b> para crear las tablas y habilitar el acceso.<br>
+        💾 Tablas: <b>clientes</b>, <b>cuentas</b> y <b>perfiles</b>.
       </div>
     </div>
 
@@ -614,6 +615,36 @@ input[type="date"]{color-scheme:dark;}
 
 <!-- TOAST -->
 <div class="toast" id="toast"></div>
+
+<!-- ════ MODAL: SQL INSTRUCCIONES ════ -->
+<div class="overlay center" id="mSql">
+  <div class="modal floating" style="max-width:440px">
+    <div class="modal-hdr">
+      <div class="modal-title">⚠️ Crear tablas primero</div>
+      <button class="modal-close" onclick="closeModal('mSql')">✕</button>
+    </div>
+    <p style="font-size:0.8rem;color:var(--muted2);margin-bottom:12px;line-height:1.5">
+      Las tablas no existen en tu proyecto de Supabase. Copiá este SQL, andá a
+      <b style="color:var(--accent2)">Supabase → SQL Editor → New Query</b>,
+      pegalo y ejecutalo. Después volvé y tocá <b style="color:var(--green)">Ya creé las tablas</b>.
+    </p>
+    <div style="position:relative">
+      <pre id="sqlCode" style="
+        background:var(--bg);border:1px solid var(--border2);border-radius:9px;
+        padding:12px;font-family:var(--mono);font-size:0.68rem;color:var(--text);
+        overflow-x:auto;white-space:pre;margin-bottom:10px;line-height:1.6;
+      "></pre>
+      <button onclick="copiarSQL()" style="
+        position:absolute;top:8px;right:8px;
+        background:var(--s4);border:1px solid var(--border2);
+        color:var(--muted2);font-size:0.68rem;font-family:var(--font);
+        font-weight:700;padding:3px 9px;border-radius:6px;cursor:pointer;
+      " id="btnCopySQL">Copiar</button>
+    </div>
+    <button class="btn-submit" style="background:linear-gradient(135deg,var(--supabase),#0ea5e9)"
+      onclick="conectarDespuesDeTablasCreadas()">✅ Ya creé las tablas — Conectar</button>
+  </div>
+</div>
 
 <!-- ════ MODAL: CLIENTE ════ -->
 <div class="overlay" id="mCliente">
@@ -824,12 +855,33 @@ async function connectSupabase() {
   if (!url || !key) { toast('⚠️ Completá URL y API Key'); return; }
   if (!url.includes('supabase.co')) { toast('⚠️ URL inválida de Supabase'); return; }
 
-  toast('🔄 Conectando y creando tablas...');
-  CFG = { type: 'supabase', supaUrl: url, supaKey: key };
+  toast('🔄 Verificando conexión...');
+  CFG = { type: 'supabase', supaUrl: url.replace(/\/$/, ''), supaKey: key };
 
-  // Crear tablas si no existen
   try {
-    await ensureSupabaseTables();
+    // Solo verificar que la URL y key son válidas haciendo un ping
+    const res = await fetch(CFG.supaUrl + '/rest/v1/', {
+      headers: { 'apikey': key, 'Authorization': 'Bearer ' + key }
+    });
+    if (!res.ok && res.status !== 200 && res.status !== 404) {
+      throw new Error('Credenciales inválidas (status ' + res.status + ')');
+    }
+
+    // Intentar acceder a la tabla clientes
+    const test = await fetch(CFG.supaUrl + '/rest/v1/clientes?limit=1', {
+      headers: { 'apikey': key, 'Authorization': 'Bearer ' + key }
+    });
+
+    if (!test.ok) {
+      const err = await test.json().catch(()=>({}));
+      if ((err.message||'').includes('does not exist') || (err.message||'').includes('not find')) {
+        // Tablas no creadas → mostrar instrucciones
+        showSqlInstructions();
+        return;
+      }
+      throw new Error(err.message || 'Error ' + test.status);
+    }
+
     saveCFG();
     selectDB('supabase');
     updateDBPill();
@@ -838,8 +890,43 @@ async function connectSupabase() {
     await reloadAll();
     showView('clientes');
   } catch(e) {
-    toast('❌ Error: ' + e.message);
+    toast('❌ ' + e.message);
   }
+}
+
+function showSqlInstructions() {
+  const sql = `CREATE TABLE IF NOT EXISTS clientes (
+  id TEXT PRIMARY KEY,
+  servicio TEXT, nombre TEXT, telefono TEXT,
+  correo TEXT, contrasena TEXT, perfil TEXT,
+  pin TEXT, vencimiento TEXT, creado TEXT
+);
+
+CREATE TABLE IF NOT EXISTS cuentas (
+  id TEXT PRIMARY KEY,
+  servicio TEXT, correo TEXT, contrasena TEXT,
+  vencimiento TEXT, creado TEXT
+);
+
+CREATE TABLE IF NOT EXISTS perfiles (
+  id TEXT PRIMARY KEY,
+  cuenta_id TEXT, numero INTEGER, pin TEXT,
+  asignado BOOLEAN DEFAULT false,
+  cliente_wa TEXT, vencimiento TEXT
+);
+
+-- Habilitar acceso público (necesario para anon key)
+ALTER TABLE clientes ENABLE ROW LEVEL SECURITY;
+ALTER TABLE cuentas  ENABLE ROW LEVEL SECURITY;
+ALTER TABLE perfiles ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY IF NOT EXISTS "allow_all_clientes" ON clientes FOR ALL USING (true) WITH CHECK (true);
+CREATE POLICY IF NOT EXISTS "allow_all_cuentas"  ON cuentas  FOR ALL USING (true) WITH CHECK (true);
+CREATE POLICY IF NOT EXISTS "allow_all_perfiles"  ON perfiles FOR ALL USING (true) WITH CHECK (true);`;
+
+  // Mostrar modal con el SQL
+  document.getElementById('sqlCode').textContent = sql;
+  openModal('mSql');
 }
 
 async function connectGsheets() {
@@ -864,61 +951,27 @@ function saveCFG() {
 //  SUPABASE API
 // ══════════════════════════════════════════════════════
 async function sbFetch(path, method='GET', body=null) {
-  const opts = {
-    method,
-    headers: {
-      'apikey': CFG.supaKey,
-      'Authorization': 'Bearer ' + CFG.supaKey,
-      'Content-Type': 'application/json',
-      'Prefer': method==='POST' ? 'return=representation' : ''
-    }
+  const headers = {
+    'apikey': CFG.supaKey,
+    'Authorization': 'Bearer ' + CFG.supaKey,
+    'Content-Type': 'application/json',
   };
+  if (method === 'POST')   headers['Prefer'] = 'return=representation';
+  if (method === 'PATCH')  headers['Prefer'] = 'return=minimal';
+  if (method === 'DELETE') headers['Prefer'] = 'return=minimal';
+  const opts = { method, headers };
   if (body) opts.body = JSON.stringify(body);
   const res = await fetch(CFG.supaUrl + '/rest/v1/' + path, opts);
+  if (res.status === 204) return [];
   if (!res.ok) {
     const err = await res.json().catch(()=>({}));
-    throw new Error(err.message || res.statusText);
+    throw new Error(err.message || err.hint || ('HTTP ' + res.status));
   }
   const text = await res.text();
   return text ? JSON.parse(text) : [];
 }
 
-async function ensureSupabaseTables() {
-  // Usar la API SQL de Supabase para crear tablas
-  const sql = `
-    CREATE TABLE IF NOT EXISTS clientes (
-      id TEXT PRIMARY KEY,
-      servicio TEXT, nombre TEXT, telefono TEXT,
-      correo TEXT, contrasena TEXT, perfil TEXT,
-      pin TEXT, vencimiento TEXT, creado TEXT
-    );
-    CREATE TABLE IF NOT EXISTS cuentas (
-      id TEXT PRIMARY KEY,
-      servicio TEXT, correo TEXT, contrasena TEXT,
-      vencimiento TEXT, creado TEXT
-    );
-    CREATE TABLE IF NOT EXISTS perfiles (
-      id TEXT PRIMARY KEY,
-      cuenta_id TEXT, numero INTEGER, pin TEXT,
-      asignado BOOLEAN DEFAULT false,
-      cliente_wa TEXT, vencimiento TEXT
-    );
-  `;
-  const res = await fetch(CFG.supaUrl + '/rest/v1/rpc/exec_sql', {
-    method: 'POST',
-    headers: {
-      'apikey': CFG.supaKey,
-      'Authorization': 'Bearer ' + CFG.supaKey,
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({ sql })
-  });
-  // Si falla el rpc (puede no existir), intentamos un GET simple para verificar conexión
-  if (!res.ok) {
-    // Verificar conexión con un simple SELECT
-    await sbFetch('clientes?limit=1');
-  }
-}
+
 
 // ══════════════════════════════════════════════════════
 //  GOOGLE SHEETS API
@@ -936,7 +989,7 @@ async function gsFetch(params) {
 const DB = {
   async getClientes() {
     if (CFG.type === 'supabase') {
-      return sbFetch('clientes?order=creado.desc');
+      return sbFetch('clientes?select=*');
     } else {
       const r = await gsFetch({ action: 'getClientes' });
       return r.ok ? r.data : [];
@@ -984,7 +1037,7 @@ const DB = {
 
   async getCuentas() {
     if (CFG.type === 'supabase') {
-      const cuentas   = await sbFetch('cuentas?order=creado.desc');
+      const cuentas   = await sbFetch('cuentas?select=*');
       const perfiles  = await sbFetch('perfiles?order=numero.asc');
       cuentas.forEach(c => { c.perfiles = perfiles.filter(p => p.cuenta_id === c.id); });
       return cuentas;
@@ -1442,6 +1495,39 @@ Si un campo no existe dejalo como string vacío.`,
     toast('✨ ¡Datos extraídos!');
   } catch(e) { toast('❌ Error al extraer'); console.error(e); }
   finally { btn.innerHTML='✨ Extraer datos automáticamente'; btn.disabled=false; }
+}
+
+// ══════════════════════════════════════════════════════
+//  SQL HELPER
+// ══════════════════════════════════════════════════════
+function copiarSQL() {
+  const txt = document.getElementById('sqlCode').textContent;
+  navigator.clipboard.writeText(txt).then(()=>{
+    const btn = document.getElementById('btnCopySQL');
+    btn.textContent = '✅ Copiado';
+    setTimeout(()=>btn.textContent='Copiar', 2000);
+  });
+}
+
+async function conectarDespuesDeTablasCreadas() {
+  closeModal('mSql');
+  try {
+    const test = await fetch(CFG.supaUrl + '/rest/v1/clientes?limit=1', {
+      headers: { 'apikey': CFG.supaKey, 'Authorization': 'Bearer ' + CFG.supaKey }
+    });
+    if (!test.ok) {
+      const err = await test.json().catch(()=>({}));
+      toast('❌ Todavía no: ' + (err.message||'tablas no encontradas'));
+      return;
+    }
+    saveCFG();
+    selectDB('supabase');
+    updateDBPill();
+    checkBanner();
+    toast('✅ ¡Conectado a Supabase!');
+    await reloadAll();
+    showView('clientes');
+  } catch(e) { toast('❌ '+e.message); }
 }
 
 // ══════════════════════════════════════════════════════
