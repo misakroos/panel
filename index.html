@@ -17,9 +17,9 @@
   --fn:'Syne',sans-serif;--mo:'DM Mono',monospace;
   --r:14px;
 }
-*{margin:0;padding:0;box-sizing:border-box}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html{scroll-behavior:smooth}
-body{font-family:var(--fn);background:var(--bg);color:var(--tx);min-height:100vh;overflow-x:hidden}
+body{font-family:var(--fn);background:var(--bg);color:var(--tx);min-height:100vh;overflow-x:hidden;-webkit-text-size-adjust:100%}
 
 /* ─── SCROLLBAR ─── */
 ::-webkit-scrollbar{width:4px;height:4px}
@@ -404,6 +404,131 @@ input[type=date]{color-scheme:dark}
 
 /* dbg */
 .dbg{display:none;margin:7px 12px;background:#0a0a15;border:1px solid var(--ac);border-radius:10px;padding:10px;font-family:var(--mo);font-size:0.67rem;color:#a78bfa;max-height:160px;overflow-y:auto;white-space:pre-wrap;word-break:break-all}
+
+/* ════════════════════════════════
+   MOBILE FIRST  (≤ 480px)
+════════════════════════════════ */
+@media(max-width:480px){
+
+  /* TOPBAR */
+  .topbar{padding:10px 12px;gap:6px}
+  .logo{font-size:0.95rem}
+  .logo-sub{font-size:0.5rem}
+  /* Ocultar pill de DB en mobile para no saturar el header */
+  #dbPill{display:none}
+  .nav-btn{padding:7px 10px;font-size:0.68rem}
+
+  /* LANDING */
+  .landing{padding:28px 12px 90px;gap:24px}
+  .hero-brand{font-size:clamp(34px,11vw,52px)}
+  .hero-tag{font-size:0.6rem;padding:3px 10px}
+  .hero-q{font-size:clamp(16px,5.5vw,22px)}
+
+  /* STEP LABEL */
+  .step-label{font-size:0.58rem}
+
+  /* COUNTRY CARDS — apiladas en mobile si son muy angostas */
+  .country-row{gap:8px}
+  .ccard{padding:14px 10px;border-radius:10px}
+  .ccard-flag{font-size:28px}
+  .ccard-name{font-size:0.88rem}
+  .ccard-cur{font-size:0.62rem}
+
+  /* OPTION CARDS */
+  .ocard-body{gap:10px;padding:14px 12px 8px}
+  .ocard-icon{width:40px;height:40px;font-size:19px;border-radius:8px}
+  .ocard-name{font-size:0.93rem;margin-bottom:5px}
+  .ocard-tag{font-size:0.57rem}
+  .bullet{font-size:0.71rem;gap:5px}
+  .price-val{font-size:1.15rem}
+  .price-unit{font-size:0.57rem}
+  .ocard-cta{padding:0 12px 12px}
+  .btn-opt{padding:13px;font-size:0.82rem;border-radius:10px}
+
+  /* PANEL TABS — scroll horizontal, más compactos */
+  .ptabs{padding:7px 8px 0;gap:2px}
+  .ptab{padding:6px 10px;font-size:0.65rem}
+  .tn{font-size:0.58rem;padding:1px 5px}
+
+  /* SEARCH BAR */
+  .pmain{padding:10px}
+  .sb input{font-size:0.78rem;padding:10px 11px}
+  .rbtn{padding:0 10px;font-size:1.1rem;min-width:42px}
+
+  /* CLIENT CARDS */
+  .card{padding:11px;border-radius:12px}
+  .cn{font-size:0.9rem}
+  .cs{font-size:0.63rem}
+  .ci{font-size:0.54rem}
+  .cg{grid-template-columns:1fr 1fr;gap:7px;margin-bottom:9px}
+  .cfl{font-size:0.54rem}
+  .cfv{font-size:0.73rem}
+
+  /* BOTONES DE CLIENTE — 2x2 en mobile */
+  .cbtns{grid-template-columns:1fr 1fr;gap:6px}
+  .cb{padding:10px 6px;font-size:0.67rem;border-radius:9px}
+
+  /* MODAL — ocupa más pantalla */
+  .modal{padding:14px 14px 24px;max-height:95vh}
+  .modal.fl{width:calc(100% - 16px)}
+  .fi,.fse,.fta{font-size:16px} /* evita zoom en iOS */
+  .fg2{grid-template-columns:1fr} /* campos apilados en mobile */
+  .bsub{padding:13px;font-size:0.9rem}
+
+  /* PERFILES FORM */
+  .pfr{grid-template-columns:22px 1fr 1fr;gap:4px}
+  .pfl{width:22px;height:22px;font-size:0.62rem}
+
+  /* CUENTAS NETFLIX */
+  .aw{padding:10px}
+  .ah{flex-wrap:wrap;gap:8px}
+  .ni{grid-template-columns:1fr 1fr;gap:5px}
+  .pr{padding:8px 7px;gap:6px}
+  .pn{width:26px;height:26px}
+  .pp{font-size:0.62rem}
+  .pw{font-size:0.61rem}
+  .bas{padding:5px 8px;font-size:0.6rem}
+  .na{padding:8px 10px;gap:5px}
+
+  /* CONFIG */
+  .cw{padding:12px}
+  .dbs{grid-template-columns:1fr 1fr;gap:7px}
+  .doi{font-size:1.4rem}
+  .don{font-size:0.78rem}
+  .dod{font-size:0.59rem}
+
+  /* FAB más grande y fácil de tocar */
+  .fab{width:58px;height:58px;font-size:1.6rem;bottom:18px;right:14px}
+
+  /* TOAST no se corte */
+  .toast{font-size:0.74rem;padding:7px 14px;bottom:85px;max-width:90vw;white-space:normal;text-align:center}
+
+  /* SQL pre — scroll horizontal */
+  .sqlp{font-size:0.6rem;max-height:160px;overflow-y:auto}
+}
+
+/* ════════════════════════════════
+   TABLET  (481px – 768px)
+════════════════════════════════ */
+@media(min-width:481px) and (max-width:768px){
+  .landing{padding:36px 20px 80px;gap:28px}
+  .fg2{grid-template-columns:1fr 1fr}
+  .fi,.fse{font-size:15px}
+  .cbtns{grid-template-columns:1fr 1fr}
+  .fab{width:54px;height:54px}
+}
+
+/* ════════════════════════════════
+   DESKTOP  (≥ 769px)
+════════════════════════════════ */
+@media(min-width:769px){
+  .landing{padding:56px 24px 100px;gap:40px}
+  .ocard-body{padding:20px 20px 12px}
+  .ocard-name{font-size:1.05rem}
+  .bullet{font-size:0.78rem}
+  .modal{max-height:88vh}
+  .cbtns{grid-template-columns:1fr 1fr}
+}
 </style>
 </head>
 <body>
@@ -1063,9 +1188,9 @@ function renovarProveedor(id){
     '🔑 *Contraseña:* ' + (c.contrasena || '—') + '\n' +
     '🔢 *PIN:* ' + (c.pin || '—') + '\n' +
     '📅 *Vencimiento actual:* ' + fmtD(c.vencimiento);
-  window.open('https://wa.me/' + WA + '?text=' + encodeURIComponent(msg), '_blank');
+  location.href = 'https://wa.me/' + WA + '?text=' + encodeURIComponent(msg);
 }
-function envWA(id){ var c=clientes.find(function(x){return x.id===id;}); if(!c||!c.telefono){ toast('⚠️ Sin número de WhatsApp'); return; } var e=est(c.vencimiento); var el=e==='vencido'?'⛔ VENCIDO':e==='proximo'?'⏰ Próximo a vencer':'✅ Activo'; var msg='Hola '+(c.nombre||'')+'! 👋\n\n📺 *Servicio:* '+(c.servicio||'—')+' — Perfil '+(c.perfil||'?')+'\n📧 *Correo:* '+(c.correo||'—')+'\n🔑 *Contraseña:* '+(c.contrasena||'—')+'\n🔢 *PIN:* '+(c.pin||'—')+'\n📅 *Vencimiento:* '+fmtD(c.vencimiento)+'\n📌 *Estado:* '+el+'\n\n_MISAKROOS_ 🚀'; window.open('https://wa.me/'+c.telefono.replace(/\D/g,'')+'?text='+encodeURIComponent(msg),'_blank'); }
+function envWA(id){ var c=clientes.find(function(x){return x.id===id;}); if(!c||!c.telefono){ toast('⚠️ Sin número de WhatsApp'); return; } var e=est(c.vencimiento); var el=e==='vencido'?'⛔ VENCIDO':e==='proximo'?'⏰ Próximo a vencer':'✅ Activo'; var msg='Hola '+(c.nombre||'')+'! 👋\n\n📺 *Servicio:* '+(c.servicio||'—')+' — Perfil '+(c.perfil||'?')+'\n📧 *Correo:* '+(c.correo||'—')+'\n🔑 *Contraseña:* '+(c.contrasena||'—')+'\n🔢 *PIN:* '+(c.pin||'—')+'\n📅 *Vencimiento:* '+fmtD(c.vencimiento)+'\n📌 *Estado:* '+el+'\n\n_MISAKROOS_ 🚀'; location.href='https://wa.me/'+c.telefono.replace(/\D/g,'')+'?text='+encodeURIComponent(msg); }
 
 function renderCuentas(){
   var el=document.getElementById('cuentaList');
