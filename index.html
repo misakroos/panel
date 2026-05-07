@@ -1,294 +1,1477 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SGP | SantyGPerez - Diseño Industrial & 3D</title>
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700&family=JetBrains+Mono:wght@300&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --bg-color: #0f0f0f;
-            --card-bg: #1a1a1a;
-            --accent-color: #00d4ff;
-            --text-main: #e0e0e0;
-            --text-dim: #a0a0a0;
-            --border: #333;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MISAKROOS · Gestor de Clientes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700;12..96,800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #09090f;
+  --s1: #0e0e18;
+  --s2: #13131f;
+  --s3: #18182a;
+  --s4: #1e1e30;
+  --border: #272740;
+  --border2: #33334d;
+  --accent: #7c3aed;
+  --accent2: #06b6d4;
+  --green: #10b981;
+  --yellow: #f59e0b;
+  --red: #ef4444;
+  --wa: #25d366;
+  --text: #eeeeff;
+  --muted: #6b7280;
+  --muted2: #9ca3af;
+  --font: 'Bricolage Grotesque', sans-serif;
+  --mono: 'JetBrains Mono', monospace;
+  --radius: 14px;
+  --supabase: #3ecf8e;
+  --gsheets: #34a853;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;}
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+/* ── TOPBAR ── */
+.topbar{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:12px 16px;background:var(--s1);
+  border-bottom:1px solid var(--border);
+  position:sticky;top:0;z-index:100;gap:10px;
+}
+.logo{
+  font-size:1.1rem;font-weight:800;letter-spacing:-0.5px;white-space:nowrap;
+  background:linear-gradient(135deg,var(--accent),var(--accent2));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+}
+.topbar-right{display:flex;gap:6px;align-items:center;}
+.btn-top{
+  padding:6px 13px;border-radius:8px;font-family:var(--font);
+  font-size:0.75rem;font-weight:700;cursor:pointer;
+  border:1px solid var(--border2);background:var(--s3);
+  color:var(--muted2);transition:all .2s;white-space:nowrap;
+}
+.btn-top:hover{border-color:var(--accent2);color:var(--accent2);}
+.btn-top.admin{border-color:var(--accent);color:var(--accent);background:var(--accent)18;}
+.btn-top.admin:hover{background:var(--accent);color:#fff;}
+.db-pill{
+  display:flex;align-items:center;gap:5px;
+  padding:4px 10px;border-radius:99px;
+  font-size:0.65rem;font-weight:700;font-family:var(--mono);
+  border:1px solid;cursor:pointer;transition:all .2s;white-space:nowrap;
+}
+.db-pill.supabase{color:var(--supabase);border-color:var(--supabase);background:#3ecf8e12;}
+.db-pill.gsheets{color:var(--gsheets);border-color:var(--gsheets);background:#34a85312;}
+.db-pill.none{color:var(--red);border-color:var(--red);background:#ef444412;}
+.db-dot{width:6px;height:6px;border-radius:50%;background:currentColor;}
 
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-main);
-            line-height: 1.6;
-            overflow-x: hidden;
-        }
+/* ── TABS ── */
+.tabs{
+  display:flex;gap:2px;padding:10px 12px 0;
+  background:var(--s1);border-bottom:1px solid var(--border);
+  overflow-x:auto;scrollbar-width:none;
+}
+.tabs::-webkit-scrollbar{display:none;}
+.tab{
+  padding:7px 14px;border-radius:8px 8px 0 0;
+  font-size:0.73rem;font-weight:700;letter-spacing:0.3px;
+  cursor:pointer;border:1px solid transparent;border-bottom:none;
+  white-space:nowrap;transition:all .18s;color:var(--muted);background:transparent;
+}
+.tab.active{color:var(--text);background:var(--bg);border-color:var(--border);}
+.tab-pill{
+  display:inline-block;margin-left:5px;
+  background:var(--s4);padding:1px 7px;
+  border-radius:99px;font-size:0.65rem;font-family:var(--mono);
+}
+.tab.active .tab-pill{background:var(--accent);color:#fff;}
 
-        /* --- Navegación --- */
-        nav {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 1.5rem 10%;
-            background: rgba(15, 15, 15, 0.9);
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            border-bottom: 1px solid var(--border);
-        }
+/* ── MAIN ── */
+.main{padding:14px;max-width:500px;margin:0 auto;}
 
-        .logo {
-            font-weight: 700;
-            font-size: 1.5rem;
-            letter-spacing: 2px;
-            color: var(--accent-color);
-        }
+/* ── SEARCH ── */
+.searchbar{
+  display:flex;gap:8px;margin-bottom:14px;
+}
+.searchbar input{
+  flex:1;background:var(--s2);border:1px solid var(--border);
+  border-radius:10px;padding:9px 13px;color:var(--text);
+  font-family:var(--font);font-size:0.83rem;outline:none;transition:border-color .2s;
+}
+.searchbar input:focus{border-color:var(--accent);}
+.btn-refresh{
+  background:var(--s2);border:1px solid var(--border);border-radius:10px;
+  color:var(--muted);font-size:1rem;padding:0 12px;cursor:pointer;transition:all .2s;
+}
+.btn-refresh:hover{border-color:var(--accent2);color:var(--accent2);}
+.btn-refresh.spin{animation:spinonce .5s ease;}
+@keyframes spinonce{from{transform:rotate(0)}to{transform:rotate(360deg)}}
 
-        .nav-links {
-            list-style: none;
-            display: flex;
-            gap: 2rem;
-        }
+/* ── CLIENTE CARD ── */
+.card{
+  background:var(--s2);border:1px solid var(--border);
+  border-radius:var(--radius);padding:14px;margin-bottom:10px;
+  transition:border-color .2s,transform .15s;position:relative;
+  border-left:3px solid var(--border);
+}
+.card:hover{border-color:var(--border2);transform:translateY(-1px);}
+.card.activo{border-left-color:var(--green);}
+.card.proximo{border-left-color:var(--yellow);}
+.card.vencido{border-left-color:var(--red);}
 
-        .nav-links a {
-            text-decoration: none;
-            color: var(--text-dim);
-            font-size: 0.9rem;
-            transition: color 0.3s;
-        }
+.card-badge{
+  display:inline-flex;align-items:center;gap:4px;
+  font-size:0.62rem;font-weight:700;letter-spacing:0.7px;
+  padding:2px 9px;border-radius:99px;margin-bottom:9px;
+}
+.badge-activo{background:#10b98115;color:var(--green);border:1px solid #10b98140;}
+.badge-proximo{background:#f59e0b15;color:var(--yellow);border:1px solid #f59e0b40;}
+.badge-vencido{background:#ef444415;color:var(--red);border:1px solid #ef444440;}
 
-        .nav-links a:hover {
-            color: var(--accent-color);
-        }
+.card-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px;}
+.card-name{font-size:0.98rem;font-weight:700;line-height:1.2;}
+.card-svc{font-size:0.68rem;color:var(--accent2);font-weight:600;margin-top:2px;font-family:var(--mono);}
+.card-id{
+  font-family:var(--mono);font-size:0.6rem;color:var(--muted);
+  background:var(--s4);padding:2px 7px;border-radius:6px;flex-shrink:0;
+}
 
-        /* --- Hero Section --- */
-        header {
-            height: 80vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            padding: 0 10%;
-            background: radial-gradient(circle at center, #1a1a1a 0%, #0f0f0f 100%);
-        }
+.card-grid{
+  display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:12px;
+}
+.cf{display:flex;flex-direction:column;gap:2px;}
+.cf-label{font-size:0.58rem;color:var(--muted);font-weight:700;letter-spacing:0.5px;text-transform:uppercase;}
+.cf-val{font-size:0.78rem;font-family:var(--mono);color:var(--text);word-break:break-all;line-height:1.3;}
 
-        header h1 {
-            font-size: 4rem;
-            margin-bottom: 1rem;
-            font-weight: 700;
-        }
+.card-actions{
+  display:grid;grid-template-columns:1fr 1fr;gap:5px;
+  border-top:1px solid var(--border);padding-top:11px;
+}
+.cbtn{
+  padding:7px 8px;border-radius:8px;font-size:0.7rem;
+  font-family:var(--font);font-weight:700;cursor:pointer;
+  border:1px solid;display:flex;align-items:center;
+  justify-content:center;gap:4px;letter-spacing:0.2px;transition:all .18s;
+}
+.cbtn.renovar{background:#7c3aed12;color:var(--accent);border-color:#7c3aed50;}
+.cbtn.renovar:hover{background:var(--accent);color:#fff;border-color:var(--accent);}
+.cbtn.wa{background:#25d36612;color:var(--wa);border-color:#25d36650;}
+.cbtn.wa:hover{background:var(--wa);color:#fff;border-color:var(--wa);}
+.cbtn.edit{background:#06b6d412;color:var(--accent2);border-color:#06b6d450;}
+.cbtn.edit:hover{background:var(--accent2);color:#fff;border-color:var(--accent2);}
+.cbtn.del{background:#ef444412;color:var(--red);border-color:#ef444450;}
+.cbtn.del:hover{background:var(--red);color:#fff;border-color:var(--red);}
 
-        header p {
-            font-family: 'JetBrains Mono', monospace;
-            color: var(--text-dim);
-            max-width: 600px;
-            margin-bottom: 2rem;
-        }
+/* ── FAB ── */
+.fab{
+  position:fixed;bottom:22px;right:18px;width:54px;height:54px;
+  border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent2));
+  color:#fff;font-size:1.5rem;border:none;cursor:pointer;
+  box-shadow:0 6px 24px #7c3aed55;display:flex;align-items:center;
+  justify-content:center;transition:transform .2s,box-shadow .2s;z-index:90;
+}
+.fab:hover{transform:scale(1.08) rotate(90deg);box-shadow:0 10px 32px #7c3aed77;}
 
-        .btn {
-            padding: 1rem 2rem;
-            border: 1px solid var(--accent-color);
-            color: var(--accent-color);
-            text-decoration: none;
-            text-transform: uppercase;
-            font-size: 0.8rem;
-            letter-spacing: 2px;
-            transition: all 0.3s;
-        }
+/* ── MODAL ── */
+.overlay{
+  display:none;position:fixed;inset:0;background:#000000bb;
+  backdrop-filter:blur(5px);z-index:200;
+  align-items:flex-end;justify-content:center;
+}
+.overlay.open{display:flex;}
+.overlay.center{align-items:center;}
+.modal{
+  background:var(--s1);border:1px solid var(--border2);
+  border-radius:var(--radius) var(--radius) 0 0;
+  padding:18px;width:100%;max-width:500px;
+  max-height:92vh;overflow-y:auto;
+  animation:slideUp .22s ease;
+}
+.modal.floating{
+  border-radius:var(--radius);width:calc(100% - 32px);
+  max-width:380px;animation:fadeUp .22s ease;
+}
+@keyframes slideUp{from{transform:translateY(30px);opacity:0}to{transform:translateY(0);opacity:1}}
+@keyframes fadeUp{from{transform:scale(.94);opacity:0}to{transform:scale(1);opacity:1}}
 
-        .btn:hover {
-            background: var(--accent-color);
-            color: #000;
-        }
+.modal-hdr{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:16px;
+}
+.modal-title{font-size:1.05rem;font-weight:800;}
+.modal-close{
+  background:var(--s4);border:none;color:var(--muted);
+  font-size:1rem;width:28px;height:28px;border-radius:50%;
+  cursor:pointer;display:flex;align-items:center;justify-content:center;
+  transition:all .2s;
+}
+.modal-close:hover{background:var(--red);color:#fff;}
 
-        /* --- Portafolio --- */
-        .section {
-            padding: 5rem 10%;
-        }
+/* ── FORM ── */
+.fg{margin-bottom:11px;}
+.fl{
+  display:block;font-size:0.68rem;color:var(--muted);
+  font-weight:700;letter-spacing:0.5px;text-transform:uppercase;margin-bottom:4px;
+}
+.fi,.fsel,.fta{
+  width:100%;background:var(--s3);border:1px solid var(--border);
+  border-radius:9px;padding:9px 12px;color:var(--text);
+  font-family:var(--mono);font-size:0.82rem;outline:none;transition:border-color .2s;
+}
+.fi:focus,.fsel:focus,.fta:focus{border-color:var(--accent);}
+.fsel{appearance:none;cursor:pointer;}
+.fta{resize:vertical;min-height:75px;font-size:0.78rem;}
+.fgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+input[type="date"]{color-scheme:dark;}
 
-        .section-title {
-            font-size: 2rem;
-            margin-bottom: 3rem;
-            border-left: 4px solid var(--accent-color);
-            padding-left: 1rem;
-        }
+/* EXTRACTOR */
+.extractor{
+  background:var(--s3);border:1px dashed var(--accent);
+  border-radius:12px;padding:13px;margin-bottom:14px;
+}
+.ext-title{
+  font-size:0.68rem;font-weight:700;color:var(--accent2);
+  letter-spacing:0.5px;margin-bottom:8px;
+  display:flex;align-items:center;gap:5px;
+}
+.ext-ta{
+  width:100%;background:var(--bg);border:1px solid var(--border);
+  border-radius:8px;padding:9px;color:var(--text);
+  font-family:var(--mono);font-size:0.75rem;outline:none;
+  resize:vertical;min-height:65px;margin-bottom:7px;
+}
+.btn-extract{
+  width:100%;padding:8px;
+  background:linear-gradient(135deg,var(--accent),var(--accent2));
+  border:none;border-radius:8px;color:#fff;font-family:var(--font);
+  font-size:0.78rem;font-weight:700;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;gap:5px;transition:opacity .2s;
+}
+.btn-extract:hover{opacity:.85;}
+.btn-extract:disabled{opacity:.45;cursor:not-allowed;}
 
-        .portfolio-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-        }
+.sep{
+  font-size:0.62rem;font-weight:700;color:var(--muted);
+  letter-spacing:1px;text-transform:uppercase;
+  display:flex;align-items:center;gap:8px;margin-bottom:12px;
+}
+.sep::before,.sep::after{content:"";flex:1;height:1px;background:var(--border);}
 
-        .project-card {
-            background: var(--card-bg);
-            border: 1px solid var(--border);
-            overflow: hidden;
-            transition: transform 0.3s;
-        }
+.btn-submit{
+  width:100%;padding:11px;
+  background:linear-gradient(135deg,var(--accent),#5b21b6);
+  border:none;border-radius:10px;color:#fff;font-family:var(--font);
+  font-size:0.88rem;font-weight:800;cursor:pointer;
+  margin-top:6px;transition:opacity .2s;letter-spacing:0.3px;
+}
+.btn-submit:hover{opacity:.85;}
 
-        .project-card:hover {
-            transform: translateY(-10px);
-            border-color: var(--accent-color);
-        }
+/* ── ADMIN (Netflix) ── */
+.admin-wrap{padding:14px;max-width:500px;margin:0 auto;}
+.admin-hdr{
+  display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;
+}
+.admin-hdr-title{font-size:1.05rem;font-weight:800;}
+.admin-hdr-sub{font-size:0.72rem;color:var(--muted);margin-top:1px;}
 
-        .project-img {
-            width: 100%;
-            height: 250px;
-            background: #252525; /* Placeholder para imágenes */
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #444;
-            font-weight: bold;
-        }
+.cuenta-card{
+  background:var(--s2);border:1px solid var(--border);
+  border-radius:var(--radius);overflow:hidden;margin-bottom:14px;
+}
+.cuenta-hdr{
+  background:linear-gradient(135deg,#b91c1c,#7f1d1d);
+  padding:12px 14px;display:flex;align-items:center;justify-content:space-between;
+}
+.cuenta-hdr-title{
+  font-size:0.88rem;font-weight:800;color:#fff;
+  display:flex;align-items:center;gap:7px;
+}
+.cuenta-id-badge{
+  font-family:var(--mono);font-size:0.58rem;
+  color:#ffffff55;background:#ffffff10;padding:2px 7px;border-radius:6px;
+}
+.cuenta-body{padding:12px;}
+.cuenta-info{
+  display:grid;grid-template-columns:1fr 1fr;gap:6px;
+  margin-bottom:10px;padding-bottom:10px;border-bottom:1px solid var(--border);
+}
+.cuenta-info .cf-val{font-size:0.72rem;}
 
-        .project-info {
-            padding: 1.5rem;
-        }
+.perfs-title{
+  font-size:0.65rem;font-weight:700;color:var(--muted);
+  letter-spacing:0.8px;text-transform:uppercase;margin-bottom:7px;
+}
+.perfil-row{
+  display:flex;align-items:center;gap:8px;
+  padding:8px;border-radius:9px;background:var(--s3);margin-bottom:5px;
+}
+.pnum{
+  width:26px;height:26px;border-radius:50%;
+  background:var(--s4);border:1.5px solid var(--border2);
+  display:flex;align-items:center;justify-content:center;
+  font-size:0.68rem;font-weight:800;flex-shrink:0;transition:all .2s;
+}
+.pnum.asig{background:var(--green);border-color:var(--green);color:#fff;}
+.pinfo{flex:1;min-width:0;}
+.ppin{font-family:var(--mono);font-size:0.68rem;color:var(--muted);}
+.pwa{font-size:0.65rem;color:var(--accent2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.pwa.libre{color:var(--muted);}
 
-        .project-info h3 {
-            margin-bottom: 0.5rem;
-            font-size: 1.2rem;
-        }
+.btn-asig{
+  padding:4px 10px;border-radius:6px;font-size:0.62rem;
+  font-weight:700;font-family:var(--font);cursor:pointer;
+  border:1px solid;white-space:nowrap;transition:all .18s;flex-shrink:0;
+}
+.btn-asig.libre{background:#7c3aed12;color:var(--accent);border-color:#7c3aed50;}
+.btn-asig.libre:hover{background:var(--accent);color:#fff;border-color:var(--accent);}
+.btn-asig.asig{background:#10b98112;color:var(--green);border-color:#10b98150;}
+.btn-asig.asig:hover{background:var(--red);color:#fff;border-color:var(--red);}
 
-        .project-info p {
-            color: var(--text-dim);
-            font-size: 0.9rem;
-        }
+.cuenta-actions{
+  display:flex;gap:6px;padding:10px 12px;border-top:1px solid var(--border);
+}
 
-        /* --- Skills --- */
-        .skills-container {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 1rem;
-        }
+/* ── CONFIG ── */
+.cfg-wrap{padding:20px 16px;max-width:500px;margin:0 auto;}
+.cfg-title{
+  font-size:1.25rem;font-weight:800;margin-bottom:5px;
+  background:linear-gradient(135deg,var(--accent),var(--accent2));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+}
+.cfg-sub{color:var(--muted);font-size:0.8rem;line-height:1.5;margin-bottom:20px;}
 
-        .skill-tag {
-            background: #222;
-            padding: 0.5rem 1rem;
-            border-radius: 4px;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.8rem;
-            border: 1px solid var(--border);
-        }
+/* DB SELECTOR */
+.db-selector{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:22px;}
+.db-opt{
+  background:var(--s2);border:2px solid var(--border);border-radius:13px;
+  padding:16px 12px;cursor:pointer;transition:all .2s;text-align:center;
+}
+.db-opt:hover{border-color:var(--border2);}
+.db-opt.selected.supabase{border-color:var(--supabase);background:#3ecf8e0a;}
+.db-opt.selected.gsheets{border-color:var(--gsheets);background:#34a8530a;}
+.db-opt-icon{font-size:1.8rem;margin-bottom:6px;}
+.db-opt-name{font-size:0.85rem;font-weight:800;margin-bottom:3px;}
+.db-opt-desc{font-size:0.65rem;color:var(--muted);line-height:1.4;}
+.db-opt-badge{
+  display:inline-block;margin-top:6px;
+  font-size:0.58rem;font-weight:700;padding:2px 8px;
+  border-radius:99px;font-family:var(--mono);
+}
+.db-opt.supabase .db-opt-badge{background:#3ecf8e18;color:var(--supabase);}
+.db-opt.gsheets .db-opt-badge{background:#34a85318;color:var(--gsheets);}
 
-        /* --- Contacto --- */
-        .contact-form {
-            max-width: 600px;
-            display: grid;
-            gap: 1.5rem;
-        }
+/* CONFIG PANELS */
+.cfg-panel{display:none;}
+.cfg-panel.active{display:block;}
 
-        .contact-form input, .contact-form textarea {
-            width: 100%;
-            padding: 1rem;
-            background: var(--card-bg);
-            border: 1px solid var(--border);
-            color: white;
-            font-family: inherit;
-        }
+.cfg-steps{display:flex;flex-direction:column;gap:9px;margin-bottom:18px;}
+.cfg-step{
+  background:var(--s2);border:1px solid var(--border);
+  border-radius:11px;padding:12px;display:flex;gap:10px;align-items:flex-start;
+}
+.step-n{
+  width:24px;height:24px;border-radius:50%;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  font-size:0.7rem;font-weight:800;
+}
+.supabase .step-n{background:linear-gradient(135deg,var(--supabase),#0ea5e9);}
+.gsheets .step-n{background:linear-gradient(135deg,var(--gsheets),#0ea5e9);}
+.step-n{color:#fff;}
+.step-txt{font-size:0.78rem;color:var(--text);line-height:1.5;}
+.step-txt b{color:var(--accent2);}
+.step-txt code{
+  font-family:var(--mono);font-size:0.72rem;
+  background:var(--s4);padding:1px 5px;border-radius:4px;color:var(--text);
+}
 
-        .contact-form input:focus, .contact-form textarea:focus {
-            outline: none;
-            border-color: var(--accent-color);
-        }
+.btn-connect{
+  width:100%;padding:11px;border:none;border-radius:10px;
+  color:#fff;font-family:var(--font);font-size:0.85rem;font-weight:800;
+  cursor:pointer;transition:opacity .2s;letter-spacing:0.3px;margin-top:4px;
+}
+.btn-connect.supabase{background:linear-gradient(135deg,var(--supabase),#0ea5e9);}
+.btn-connect.gsheets{background:linear-gradient(135deg,var(--gsheets),#16a34a);}
+.btn-connect:hover{opacity:.85;}
 
-        footer {
-            padding: 3rem 10%;
-            text-align: center;
-            border-top: 1px solid var(--border);
-            color: var(--text-dim);
-            font-size: 0.8rem;
-        }
+.status-row{
+  display:flex;align-items:center;gap:8px;
+  background:var(--s2);border:1px solid var(--border);
+  border-radius:10px;padding:10px 12px;margin-bottom:10px;
+}
+.status-dot{width:8px;height:8px;border-radius:50%;background:var(--red);flex-shrink:0;}
+.status-dot.on{background:var(--green);}
+.status-label{font-size:0.78rem;color:var(--muted2);}
 
-        @media (max-width: 768px) {
-            header h1 { font-size: 2.5rem; }
-            .nav-links { display: none; }
-        }
-    </style>
+.info-box{
+  background:var(--s2);border:1px solid var(--border);border-radius:11px;
+  padding:12px 14px;font-size:0.76rem;color:var(--muted);line-height:1.7;margin-top:14px;
+}
+.info-box b{color:var(--text);}
+
+/* ── EMPTY ── */
+.empty{text-align:center;padding:40px 16px;color:var(--muted);}
+.empty-ico{font-size:2.8rem;margin-bottom:10px;}
+.empty-t{font-size:0.9rem;font-weight:700;color:var(--text);margin-bottom:3px;}
+.empty-s{font-size:0.78rem;}
+
+/* ── TOAST ── */
+.toast{
+  position:fixed;bottom:84px;left:50%;
+  transform:translateX(-50%) translateY(10px);
+  background:var(--s3);border:1px solid var(--border2);
+  padding:8px 18px;border-radius:99px;
+  font-size:0.8rem;font-weight:700;
+  opacity:0;pointer-events:none;transition:all .25s;z-index:999;white-space:nowrap;
+}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+/* ── SPINNER ── */
+.spin-ico{
+  display:inline-block;width:13px;height:13px;
+  border:2px solid #fff4;border-top-color:#fff;
+  border-radius:50%;animation:sp .6s linear infinite;
+}
+@keyframes sp{to{transform:rotate(360deg)}}
+
+/* ── NO CONFIG BANNER ── */
+.no-cfg{
+  display:none;margin:10px 14px;
+  background:#ef444412;border:1px solid #ef444440;
+  border-radius:9px;padding:9px 13px;
+  font-size:0.78rem;color:var(--red);
+  display:flex;align-items:center;gap:7px;cursor:pointer;
+}
+.no-cfg.hidden{display:none!important;}
+
+/* ── PERFIL FORM ── */
+.pf-row{
+  display:grid;grid-template-columns:auto 1fr 1fr;
+  gap:7px;align-items:center;margin-bottom:6px;
+}
+.pf-label{
+  font-size:0.7rem;font-weight:800;color:var(--muted2);
+  background:var(--s4);width:28px;height:28px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+}
+
+::-webkit-scrollbar{width:4px;height:4px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:99px;}
+</style>
 </head>
 <body>
 
-    <nav>
-        <div class="logo">SGP</div>
-        <ul class="nav-links">
-            <li><a href="#proyectos">Proyectos</a></li>
-            <li><a href="#habilidades">Habilidades</a></li>
-            <li><a href="#contacto">Contacto</a></li>
-        </ul>
-    </nav>
+<!-- TOPBAR -->
+<div class="topbar">
+  <div class="logo">MISAKROOS</div>
+  <div class="topbar-right">
+    <div class="db-pill none" id="dbPill" onclick="showView('config')" title="Base de datos">
+      <div class="db-dot"></div>
+      <span id="dbPillLabel">Sin DB</span>
+    </div>
+    <button class="btn-top admin" onclick="showView('admin')">⚡ Admin</button>
+    <button class="btn-top" onclick="showView('config')">⚙️</button>
+  </div>
+</div>
 
-    <header>
-        <h1>SantyGPerez</h1>
-        <p>// DISEÑADOR INDUSTRIAL & MODELADOR 3D PROFESIONAL</p>
-        <p>Especializado en superficies complejas, visualización de producto y prototipado técnico.</p>
-        <a href="#proyectos" class="btn">Ver Proyectos</a>
-    </header>
+<!-- NO CONFIG BANNER -->
+<div class="no-cfg hidden" id="noBanner" onclick="showView('config')">
+  ⚠️ Sin base de datos configurada — tocá para configurar
+</div>
 
-    <section class="section" id="proyectos">
-        <h2 class="section-title">Portafolio Seleccionado</h2>
-        <div class="portfolio-grid">
-            <!-- Proyecto 1 -->
-            <div class="project-card">
-                <div class="project-img">RENDER 3D [01]</div>
-                <div class="project-info">
-                    <h3>Dispositivo Médico Ergonómico</h3>
-                    <p>Modelado paramétrico centrado en el usuario y optimización de inyección de plásticos.</p>
-                </div>
-            </div>
-            <!-- Proyecto 2 -->
-            <div class="project-card">
-                <div class="project-img">RENDER 3D [02]</div>
-                <div class="project-info">
-                    <h3>Mobiliario de Autor</h3>
-                    <p>Diseño de sillería con superficies orgánicas y texturizado PBR de alta resolución.</p>
-                </div>
-            </div>
-            <!-- Proyecto 3 -->
-            <div class="project-card">
-                <div class="project-img">RENDER 3D [03]</div>
-                <div class="project-info">
-                    <h3>Componente Automotriz</h3>
-                    <p>Modelado de superficies clase A para integración en chasis aerodinámico.</p>
-                </div>
-            </div>
+<!-- ════════════ VIEW: CLIENTES ════════════ -->
+<div id="vClientes">
+  <div class="tabs">
+    <div class="tab active" id="tActivos" onclick="setTab('activos')">Activos <span class="tab-pill" id="cActivos">0</span></div>
+    <div class="tab" id="tProximos" onclick="setTab('proximos')">Próximos a vencer <span class="tab-pill" id="cProximos">0</span></div>
+    <div class="tab" id="tVencidos" onclick="setTab('vencidos')">Vencidos <span class="tab-pill" id="cVencidos">0</span></div>
+  </div>
+  <div class="main">
+    <div class="searchbar">
+      <input type="text" id="searchQ" placeholder="🔍  Buscar nombre, teléfono, correo..." oninput="renderClientes()">
+      <button class="btn-refresh" id="refreshBtn" onclick="reloadAll()" title="Actualizar">↻</button>
+    </div>
+    <div id="clientesList"></div>
+  </div>
+</div>
+
+<!-- ════════════ VIEW: ADMIN ════════════ -->
+<div id="vAdmin" style="display:none">
+  <div class="admin-wrap">
+    <div class="admin-hdr">
+      <div>
+        <div class="admin-hdr-title">Cuentas Netflix</div>
+        <div class="admin-hdr-sub">Perfiles y asignaciones</div>
+      </div>
+      <button class="btn-top admin" onclick="openModalCuenta()">+ Nueva cuenta</button>
+    </div>
+    <div id="cuentasList"></div>
+  </div>
+</div>
+
+<!-- ════════════ VIEW: CONFIG ════════════ -->
+<div id="vConfig" style="display:none">
+  <div class="cfg-wrap">
+    <div class="cfg-title">Configuración</div>
+    <div class="cfg-sub">Elegí tu base de datos. Podés cambiarla en cualquier momento sin perder nada.</div>
+
+    <!-- DB SELECTOR -->
+    <div class="db-selector">
+      <div class="db-opt supabase" id="optSupabase" onclick="selectDB('supabase')">
+        <div class="db-opt-icon">🟢</div>
+        <div class="db-opt-name">Supabase</div>
+        <div class="db-opt-desc">PostgreSQL real con API Key privada. Más seguro.</div>
+        <div class="db-opt-badge">RECOMENDADO</div>
+      </div>
+      <div class="db-opt gsheets" id="optGsheets" onclick="selectDB('gsheets')">
+        <div class="db-opt-icon">📊</div>
+        <div class="db-opt-name">Google Sheets</div>
+        <div class="db-opt-desc">Grilla visual editable. Fácil de ver y exportar.</div>
+        <div class="db-opt-badge">MÁS SIMPLE</div>
+      </div>
+    </div>
+
+    <!-- PANEL SUPABASE -->
+    <div class="cfg-panel supabase" id="panelSupabase">
+      <div class="status-row">
+        <div class="status-dot" id="dotSupa"></div>
+        <div class="status-label" id="lblSupa">Sin conectar</div>
+      </div>
+
+      <div class="cfg-steps">
+        <div class="cfg-step supabase">
+          <div class="step-n">1</div>
+          <div class="step-txt">Entrá a <b>supabase.com</b>, creá una cuenta gratuita y un nuevo proyecto.</div>
         </div>
-    </section>
-
-    <section class="section" id="habilidades" style="background: #141414;">
-        <h2 class="section-title">Stack Técnico</h2>
-        <div class="skills-container">
-            <span class="skill-tag">SolidWorks</span>
-            <span class="skill-tag">Rhinoceros 3D</span>
-            <span class="skill-tag">Keyshot</span>
-            <span class="skill-tag">Blender</span>
-            <span class="skill-tag">Fusion 360</span>
-            <span class="skill-tag">ZBrush</span>
-            <span class="skill-tag">Unreal Engine 5</span>
-            <span class="skill-tag">Impresión 3D (FDM/SLA)</span>
+        <div class="cfg-step supabase">
+          <div class="step-n">2</div>
+          <div class="step-txt">En tu proyecto, andá a <b>Settings → API</b>. Copiá la <b>Project URL</b> y la clave <b>anon public</b>.</div>
         </div>
-    </section>
-
-    <section class="section" id="contacto">
-        <h2 class="section-title">¿Tienes un proyecto en mente?</h2>
-        <div class="contact-form">
-            <input type="text" placeholder="Nombre completo">
-            <input type="email" placeholder="Correo electrónico">
-            <textarea rows="5" placeholder="Cuéntame sobre tu proyecto o necesidad técnica"></textarea>
-            <button class="btn" style="background: transparent; cursor: pointer; width: fit-content;">Enviar Mensaje</button>
+        <div class="cfg-step supabase">
+          <div class="step-n">3</div>
+          <div class="step-txt">Pegá los datos abajo y tocá Conectar. La app crea las tablas automáticamente.</div>
         </div>
-    </section>
+      </div>
 
-    <footer>
-        <p>&copy; 2026 SantyGPerez | Diseñador Industrial | SantyGPerez.com</p>
-    </footer>
+      <div class="fg">
+        <label class="fl">Project URL</label>
+        <input type="url" class="fi" id="supaUrl" placeholder="https://xxxxxxxxxxxx.supabase.co">
+      </div>
+      <div class="fg">
+        <label class="fl">Anon Key (API Key pública)</label>
+        <input type="text" class="fi" id="supaKey" placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...">
+      </div>
+      <button class="btn-connect supabase" onclick="connectSupabase()">🟢 Conectar con Supabase</button>
 
+      <div class="info-box">
+        🔐 Tu <b>anon key</b> es segura para usar en el frontend — Supabase la protege con Row Level Security.<br>
+        💾 Los datos se guardan en tablas <b>clientes</b>, <b>cuentas</b> y <b>perfiles</b> creadas automáticamente.
+      </div>
+    </div>
+
+    <!-- PANEL GOOGLE SHEETS -->
+    <div class="cfg-panel gsheets" id="panelGsheets">
+      <div class="status-row">
+        <div class="status-dot" id="dotGs"></div>
+        <div class="status-label" id="lblGs">Sin conectar</div>
+      </div>
+
+      <div class="cfg-steps">
+        <div class="cfg-step gsheets">
+          <div class="step-n">1</div>
+          <div class="step-txt">Abrí un Google Sheets nuevo. Andá a <b>Extensiones → Apps Script</b> y pegá el contenido del archivo <b>code.gs</b> que descargaste.</div>
+        </div>
+        <div class="cfg-step gsheets">
+          <div class="step-n">2</div>
+          <div class="step-txt">Hacé clic en <b>Implementar → Nueva implementación → Aplicación web</b>. Ejecutar como: <b>Yo</b>. Acceso: <b>Cualquier persona</b>. Copiá la URL.</div>
+        </div>
+        <div class="cfg-step gsheets">
+          <div class="step-n">3</div>
+          <div class="step-txt">Pegá la URL abajo (termina en <code>/exec</code>) y conectá.</div>
+        </div>
+      </div>
+
+      <div class="fg">
+        <label class="fl">URL de Apps Script</label>
+        <input type="url" class="fi" id="gsUrl" placeholder="https://script.google.com/macros/s/.../exec">
+      </div>
+      <button class="btn-connect gsheets" onclick="connectGsheets()">📊 Conectar con Google Sheets</button>
+
+      <div class="info-box">
+        ⚠️ Con Google Sheets el acceso es <b>"Cualquier persona"</b> — quien tenga la URL puede ver los datos.<br>
+        ✅ Para uso personal o de confianza está bien. Si querés más seguridad, usá <b>Supabase</b>.
+      </div>
+    </div>
+
+    <div style="height:20px"></div>
+  </div>
+</div>
+
+<!-- FAB -->
+<button class="fab" id="fabBtn" onclick="openModalCliente()">+</button>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<!-- ════ MODAL: CLIENTE ════ -->
+<div class="overlay" id="mCliente">
+  <div class="modal">
+    <div class="modal-hdr">
+      <div class="modal-title" id="mClienteTitle">Nuevo Cliente</div>
+      <button class="modal-close" onclick="closeModal('mCliente')">✕</button>
+    </div>
+
+    <!-- EXTRACTOR IA -->
+    <div class="extractor">
+      <div class="ext-title">✨ Extractor Inteligente con IA</div>
+      <textarea class="ext-ta" id="extText"
+        placeholder="Pegá el texto con los datos del cliente aquí...&#10;&#10;Ejemplo:&#10;Netflix | Juan García | juan@gmail.com | pass123 | Perfil 2 | PIN 4567 | vence 15/07/2025 | WA: 5491123456789"></textarea>
+      <button class="btn-extract" onclick="extractarDatos()" id="btnExtract">
+        ✨ Extraer datos automáticamente
+      </button>
+    </div>
+
+    <div class="sep">o completar manualmente</div>
+
+    <input type="hidden" id="editId">
+    <div class="fg">
+      <label class="fl">Servicio</label>
+      <select class="fsel" id="fSvc">
+        <option>Netflix</option><option>Disney+</option><option>HBO Max</option>
+        <option>Amazon Prime</option><option>Spotify</option><option>YouTube Premium</option>
+        <option>Paramount+</option><option>Apple TV+</option><option>Otro</option>
+      </select>
+    </div>
+    <div class="fgrid">
+      <div class="fg">
+        <label class="fl">Nombre completo</label>
+        <input type="text" class="fi" id="fNombre" placeholder="Juan García">
+      </div>
+      <div class="fg">
+        <label class="fl">Teléfono / WhatsApp</label>
+        <input type="text" class="fi" id="fTel" placeholder="5491112345678">
+      </div>
+    </div>
+    <div class="fg">
+      <label class="fl">Correo de la cuenta</label>
+      <input type="email" class="fi" id="fCorreo" placeholder="correo@gmail.com">
+    </div>
+    <div class="fgrid">
+      <div class="fg">
+        <label class="fl">Contraseña</label>
+        <input type="text" class="fi" id="fPass" placeholder="••••••••">
+      </div>
+      <div class="fg">
+        <label class="fl">Perfil #</label>
+        <input type="text" class="fi" id="fPerfil" placeholder="1">
+      </div>
+    </div>
+    <div class="fgrid">
+      <div class="fg">
+        <label class="fl">PIN</label>
+        <input type="text" class="fi" id="fPin" placeholder="1234">
+      </div>
+      <div class="fg">
+        <label class="fl">Fecha de vencimiento</label>
+        <input type="date" class="fi" id="fVenc">
+      </div>
+    </div>
+    <button class="btn-submit" onclick="saveCliente()">💾 Guardar Cliente</button>
+  </div>
+</div>
+
+<!-- ════ MODAL: CUENTA NETFLIX ════ -->
+<div class="overlay" id="mCuenta">
+  <div class="modal">
+    <div class="modal-hdr">
+      <div class="modal-title">Nueva Cuenta Netflix</div>
+      <button class="modal-close" onclick="closeModal('mCuenta')">✕</button>
+    </div>
+    <input type="hidden" id="editCuentaId">
+    <div class="fg">
+      <label class="fl">Correo de la cuenta</label>
+      <input type="email" class="fi" id="cCorreo" placeholder="cuenta@gmail.com">
+    </div>
+    <div class="fgrid">
+      <div class="fg">
+        <label class="fl">Contraseña</label>
+        <input type="text" class="fi" id="cPass" placeholder="••••••••">
+      </div>
+      <div class="fg">
+        <label class="fl">Fecha de renovación</label>
+        <input type="date" class="fi" id="cVenc">
+      </div>
+    </div>
+    <div class="sep" style="margin-top:4px">Perfiles (opcional)</div>
+    <div id="pfForm"></div>
+    <button class="btn-submit" onclick="saveCuenta()">💾 Guardar Cuenta</button>
+  </div>
+</div>
+
+<!-- ════ MODAL: ASIGNAR PERFIL ════ -->
+<div class="overlay center" id="mAsignar">
+  <div class="modal floating">
+    <div class="modal-hdr">
+      <div class="modal-title">Asignar Perfil</div>
+      <button class="modal-close" onclick="closeModal('mAsignar')">✕</button>
+    </div>
+    <input type="hidden" id="asigId">
+    <div class="fg">
+      <label class="fl">WhatsApp del cliente</label>
+      <input type="text" class="fi" id="asigWA" placeholder="5491112345678">
+    </div>
+    <div class="fg">
+      <label class="fl">Fecha de vencimiento</label>
+      <input type="date" class="fi" id="asigVenc">
+    </div>
+    <button class="btn-submit" onclick="confirmarAsignar()">✅ Confirmar asignación</button>
+  </div>
+</div>
+
+<script>
+// ══════════════════════════════════════════════════════
+//  STATE
+// ══════════════════════════════════════════════════════
+let CFG = JSON.parse(localStorage.getItem('mk_cfg') || '{}');
+// CFG = { type: 'supabase'|'gsheets', supaUrl, supaKey, gsUrl }
+
+let clientes = [];
+let cuentas  = [];
+let currentTab = 'activos';
+let selectedDB = CFG.type || 'supabase';
+
+// ══════════════════════════════════════════════════════
+//  INIT
+// ══════════════════════════════════════════════════════
+async function init() {
+  selectDB(selectedDB, false);
+  updateDBPill();
+  checkBanner();
+  if (isConnected()) {
+    await reloadAll();
+  } else {
+    renderClientes();
+    renderCuentas();
+  }
+  buildPfForm();
+}
+
+function isConnected() {
+  if (CFG.type === 'supabase') return !!(CFG.supaUrl && CFG.supaKey);
+  if (CFG.type === 'gsheets')  return !!CFG.gsUrl;
+  return false;
+}
+
+function updateDBPill() {
+  const pill = document.getElementById('dbPill');
+  const lbl  = document.getElementById('dbPillLabel');
+  pill.className = 'db-pill';
+  if (!isConnected()) {
+    pill.classList.add('none');
+    lbl.textContent = 'Sin DB';
+  } else if (CFG.type === 'supabase') {
+    pill.classList.add('supabase');
+    lbl.textContent = 'Supabase';
+  } else {
+    pill.classList.add('gsheets');
+    lbl.textContent = 'Google Sheets';
+  }
+}
+
+function checkBanner() {
+  document.getElementById('noBanner').classList.toggle('hidden', isConnected());
+}
+
+// ══════════════════════════════════════════════════════
+//  VIEWS
+// ══════════════════════════════════════════════════════
+function showView(v) {
+  document.getElementById('vClientes').style.display = v==='clientes' ? '' : 'none';
+  document.getElementById('vAdmin').style.display    = v==='admin'    ? '' : 'none';
+  document.getElementById('vConfig').style.display   = v==='config'   ? '' : 'none';
+  document.getElementById('fabBtn').style.display    = v==='clientes' ? '' : 'none';
+}
+
+// ══════════════════════════════════════════════════════
+//  CONFIG
+// ══════════════════════════════════════════════════════
+function selectDB(type, updateStorage = false) {
+  selectedDB = type;
+  document.getElementById('optSupabase').classList.toggle('selected', type==='supabase');
+  document.getElementById('optGsheets').classList.toggle('selected', type==='gsheets');
+  document.getElementById('panelSupabase').classList.toggle('active', type==='supabase');
+  document.getElementById('panelGsheets').classList.toggle('active', type==='gsheets');
+
+  // Prefill if already configured
+  if (CFG.supaUrl) document.getElementById('supaUrl').value = CFG.supaUrl;
+  if (CFG.supaKey) document.getElementById('supaKey').value = CFG.supaKey;
+  if (CFG.gsUrl)   document.getElementById('gsUrl').value   = CFG.gsUrl;
+
+  // Status dots
+  const connSupa = CFG.type==='supabase' && isConnected();
+  const connGs   = CFG.type==='gsheets'  && isConnected();
+  document.getElementById('dotSupa').classList.toggle('on', connSupa);
+  document.getElementById('lblSupa').textContent = connSupa ? '✅ Conectado a Supabase' : 'Sin conectar';
+  document.getElementById('dotGs').classList.toggle('on', connGs);
+  document.getElementById('lblGs').textContent   = connGs   ? '✅ Conectado a Google Sheets' : 'Sin conectar';
+}
+
+async function connectSupabase() {
+  const url = document.getElementById('supaUrl').value.trim();
+  const key = document.getElementById('supaKey').value.trim();
+  if (!url || !key) { toast('⚠️ Completá URL y API Key'); return; }
+  if (!url.includes('supabase.co')) { toast('⚠️ URL inválida de Supabase'); return; }
+
+  toast('🔄 Conectando y creando tablas...');
+  CFG = { type: 'supabase', supaUrl: url, supaKey: key };
+
+  // Crear tablas si no existen
+  try {
+    await ensureSupabaseTables();
+    saveCFG();
+    selectDB('supabase');
+    updateDBPill();
+    checkBanner();
+    toast('✅ ¡Conectado a Supabase!');
+    await reloadAll();
+    showView('clientes');
+  } catch(e) {
+    toast('❌ Error: ' + e.message);
+  }
+}
+
+async function connectGsheets() {
+  const url = document.getElementById('gsUrl').value.trim();
+  if (!url || !url.includes('script.google.com')) { toast('⚠️ URL inválida'); return; }
+  CFG = { type: 'gsheets', gsUrl: url };
+  saveCFG();
+  selectDB('gsheets');
+  updateDBPill();
+  checkBanner();
+  toast('🔄 Conectando...');
+  await reloadAll();
+  toast('✅ ¡Conectado a Google Sheets!');
+  showView('clientes');
+}
+
+function saveCFG() {
+  localStorage.setItem('mk_cfg', JSON.stringify(CFG));
+}
+
+// ══════════════════════════════════════════════════════
+//  SUPABASE API
+// ══════════════════════════════════════════════════════
+async function sbFetch(path, method='GET', body=null) {
+  const opts = {
+    method,
+    headers: {
+      'apikey': CFG.supaKey,
+      'Authorization': 'Bearer ' + CFG.supaKey,
+      'Content-Type': 'application/json',
+      'Prefer': method==='POST' ? 'return=representation' : ''
+    }
+  };
+  if (body) opts.body = JSON.stringify(body);
+  const res = await fetch(CFG.supaUrl + '/rest/v1/' + path, opts);
+  if (!res.ok) {
+    const err = await res.json().catch(()=>({}));
+    throw new Error(err.message || res.statusText);
+  }
+  const text = await res.text();
+  return text ? JSON.parse(text) : [];
+}
+
+async function ensureSupabaseTables() {
+  // Usar la API SQL de Supabase para crear tablas
+  const sql = `
+    CREATE TABLE IF NOT EXISTS clientes (
+      id TEXT PRIMARY KEY,
+      servicio TEXT, nombre TEXT, telefono TEXT,
+      correo TEXT, contrasena TEXT, perfil TEXT,
+      pin TEXT, vencimiento TEXT, creado TEXT
+    );
+    CREATE TABLE IF NOT EXISTS cuentas (
+      id TEXT PRIMARY KEY,
+      servicio TEXT, correo TEXT, contrasena TEXT,
+      vencimiento TEXT, creado TEXT
+    );
+    CREATE TABLE IF NOT EXISTS perfiles (
+      id TEXT PRIMARY KEY,
+      cuenta_id TEXT, numero INTEGER, pin TEXT,
+      asignado BOOLEAN DEFAULT false,
+      cliente_wa TEXT, vencimiento TEXT
+    );
+  `;
+  const res = await fetch(CFG.supaUrl + '/rest/v1/rpc/exec_sql', {
+    method: 'POST',
+    headers: {
+      'apikey': CFG.supaKey,
+      'Authorization': 'Bearer ' + CFG.supaKey,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ sql })
+  });
+  // Si falla el rpc (puede no existir), intentamos un GET simple para verificar conexión
+  if (!res.ok) {
+    // Verificar conexión con un simple SELECT
+    await sbFetch('clientes?limit=1');
+  }
+}
+
+// ══════════════════════════════════════════════════════
+//  GOOGLE SHEETS API
+// ══════════════════════════════════════════════════════
+async function gsFetch(params) {
+  const url = CFG.gsUrl + '?' + new URLSearchParams(params);
+  const res = await fetch(url);
+  if (!res.ok) throw new Error('Error HTTP ' + res.status);
+  return res.json();
+}
+
+// ══════════════════════════════════════════════════════
+//  DB ADAPTER — misma interfaz para ambos backends
+// ══════════════════════════════════════════════════════
+const DB = {
+  async getClientes() {
+    if (CFG.type === 'supabase') {
+      return sbFetch('clientes?order=creado.desc');
+    } else {
+      const r = await gsFetch({ action: 'getClientes' });
+      return r.ok ? r.data : [];
+    }
+  },
+
+  async addCliente(d) {
+    if (CFG.type === 'supabase') {
+      const row = { id:'C'+Date.now(), ...d, creado: new Date().toISOString() };
+      await sbFetch('clientes', 'POST', row);
+      return { ok: true };
+    } else {
+      return gsFetch({ action:'addCliente', ...d });
+    }
+  },
+
+  async updateCliente(d) {
+    if (CFG.type === 'supabase') {
+      const { id, ...rest } = d;
+      await sbFetch('clientes?id=eq.'+id, 'PATCH', rest);
+      return { ok: true };
+    } else {
+      return gsFetch({ action:'updateCliente', ...d });
+    }
+  },
+
+  async deleteCliente(id) {
+    if (CFG.type === 'supabase') {
+      await sbFetch('clientes?id=eq.'+id, 'DELETE');
+      return { ok: true };
+    } else {
+      return gsFetch({ action:'deleteCliente', id });
+    }
+  },
+
+  async renovarCliente(id) {
+    const c = clientes.find(c=>c.id===id||c.id==id);
+    if (!c) return { ok: false };
+    let fecha = new Date(c.vencimiento);
+    if (isNaN(fecha)) fecha = new Date();
+    fecha.setMonth(fecha.getMonth()+1);
+    const nuevaFecha = fecha.toISOString().split('T')[0];
+    return DB.updateCliente({ ...c, id, vencimiento: nuevaFecha });
+  },
+
+  async getCuentas() {
+    if (CFG.type === 'supabase') {
+      const cuentas   = await sbFetch('cuentas?order=creado.desc');
+      const perfiles  = await sbFetch('perfiles?order=numero.asc');
+      cuentas.forEach(c => { c.perfiles = perfiles.filter(p => p.cuenta_id === c.id); });
+      return cuentas;
+    } else {
+      const r = await gsFetch({ action: 'getCuentas' });
+      return r.ok ? r.data : [];
+    }
+  },
+
+  async addCuenta(d, perfs) {
+    if (CFG.type === 'supabase') {
+      const id = 'N'+Date.now();
+      await sbFetch('cuentas', 'POST', { id, servicio:'Netflix', correo:d.correo, contrasena:d.contrasena, vencimiento:d.vencimiento, creado:new Date().toISOString() });
+      for (let i=0; i<5; i++) {
+        await sbFetch('perfiles', 'POST', { id:'P'+Date.now()+i, cuenta_id:id, numero:i+1, pin:perfs[i]?.pin||'', asignado:false, cliente_wa:'', vencimiento:'' });
+      }
+      return { ok: true };
+    } else {
+      return gsFetch({ action:'addCuenta', ...d, perfiles: JSON.stringify(perfs) });
+    }
+  },
+
+  async deleteCuenta(id) {
+    if (CFG.type === 'supabase') {
+      await sbFetch('perfiles?cuenta_id=eq.'+id, 'DELETE');
+      await sbFetch('cuentas?id=eq.'+id, 'DELETE');
+      return { ok: true };
+    } else {
+      return gsFetch({ action:'deleteCuenta', id });
+    }
+  },
+
+  async asignarPerfil(id, wa, venc) {
+    if (CFG.type === 'supabase') {
+      await sbFetch('perfiles?id=eq.'+id, 'PATCH', { asignado:true, cliente_wa:wa, vencimiento:venc });
+      return { ok: true };
+    } else {
+      return gsFetch({ action:'asignarPerfil', id, clienteWA:wa, vencimiento:venc });
+    }
+  },
+
+  async liberarPerfil(id) {
+    if (CFG.type === 'supabase') {
+      await sbFetch('perfiles?id=eq.'+id, 'PATCH', { asignado:false, cliente_wa:'', vencimiento:'' });
+      return { ok: true };
+    } else {
+      return gsFetch({ action:'liberarPerfil', id });
+    }
+  }
+};
+
+// ══════════════════════════════════════════════════════
+//  LOCAL FALLBACK (sin DB configurada)
+// ══════════════════════════════════════════════════════
+const LOCAL = {
+  get(k) { try { return JSON.parse(localStorage.getItem('mk_local_'+k)||'[]'); } catch { return []; } },
+  set(k,v) { localStorage.setItem('mk_local_'+k, JSON.stringify(v)); },
+
+  async getClientes() { return this.get('clientes'); },
+  async addCliente(d) {
+    const arr = this.get('clientes');
+    arr.unshift({ id:'C'+Date.now(), ...d });
+    this.set('clientes', arr); return { ok:true };
+  },
+  async updateCliente(d) {
+    const arr = this.get('clientes');
+    const i = arr.findIndex(c=>c.id==d.id);
+    if (i>=0) arr[i]={ ...arr[i], ...d };
+    this.set('clientes', arr); return { ok:true };
+  },
+  async deleteCliente(id) {
+    this.set('clientes', this.get('clientes').filter(c=>c.id!=id)); return { ok:true };
+  },
+  async renovarCliente(id) {
+    const arr = this.get('clientes');
+    const c = arr.find(c=>c.id==id);
+    if (c) {
+      let f = new Date(c.vencimiento); if(isNaN(f)) f=new Date();
+      f.setMonth(f.getMonth()+1); c.vencimiento=f.toISOString().split('T')[0];
+    }
+    this.set('clientes', arr); return { ok:true };
+  },
+  async getCuentas() {
+    const cs = this.get('cuentas'); const ps = this.get('perfiles');
+    cs.forEach(c=>{ c.perfiles = ps.filter(p=>p.cuenta_id===c.id); });
+    return cs;
+  },
+  async addCuenta(d, perfs) {
+    const id='N'+Date.now();
+    const cs = this.get('cuentas');
+    cs.unshift({ id, servicio:'Netflix', correo:d.correo, contrasena:d.contrasena, vencimiento:d.vencimiento });
+    this.set('cuentas', cs);
+    const ps = this.get('perfiles');
+    for (let i=0;i<5;i++) ps.push({ id:'P'+Date.now()+i, cuenta_id:id, numero:i+1, pin:perfs[i]?.pin||'', asignado:false, cliente_wa:'', vencimiento:'' });
+    this.set('perfiles', ps); return { ok:true };
+  },
+  async deleteCuenta(id) {
+    this.set('cuentas', this.get('cuentas').filter(c=>c.id!=id));
+    this.set('perfiles', this.get('perfiles').filter(p=>p.cuenta_id!=id));
+    return { ok:true };
+  },
+  async asignarPerfil(id, wa, venc) {
+    const ps = this.get('perfiles'); const p=ps.find(p=>p.id==id);
+    if (p) { p.asignado=true; p.cliente_wa=wa; p.vencimiento=venc; }
+    this.set('perfiles', ps); return { ok:true };
+  },
+  async liberarPerfil(id) {
+    const ps = this.get('perfiles'); const p=ps.find(p=>p.id==id);
+    if (p) { p.asignado=false; p.cliente_wa=''; p.vencimiento=''; }
+    this.set('perfiles', ps); return { ok:true };
+  }
+};
+
+function db() { return isConnected() ? DB : LOCAL; }
+
+// ══════════════════════════════════════════════════════
+//  DATA HELPERS
+// ══════════════════════════════════════════════════════
+// Normalizar campo: Supabase usa snake_case, GSheets usa camelCase
+function norm(c) {
+  return {
+    id: c.id,
+    servicio: c.servicio||'',
+    nombre: c.nombre||'',
+    telefono: c.telefono||'',
+    correo: c.correo||'',
+    contrasena: c.contrasena||'',
+    perfil: c.perfil||'',
+    pin: c.pin||'',
+    vencimiento: c.vencimiento||'',
+  };
+}
+
+function normPerfil(p) {
+  return {
+    id: p.id,
+    cuentaId: p.cuenta_id || p.cuentaId || '',
+    numero: p.numero||'',
+    pin: p.pin||'',
+    asignado: p.asignado===true || p.asignado==='true',
+    clienteWA: p.cliente_wa || p.clienteWA || '',
+    vencimiento: p.vencimiento||''
+  };
+}
+
+// ══════════════════════════════════════════════════════
+//  RELOAD
+// ══════════════════════════════════════════════════════
+async function reloadAll() {
+  const btn = document.getElementById('refreshBtn');
+  btn.classList.add('spin');
+  try {
+    const [cs, cts] = await Promise.all([ db().getClientes(), db().getCuentas() ]);
+    clientes = (cs||[]).map(norm);
+    cuentas  = (cts||[]).map(c=>({ ...c, perfiles:(c.perfiles||[]).map(normPerfil) }));
+    renderClientes();
+    renderCuentas();
+  } catch(e) {
+    toast('❌ Error cargando datos');
+    console.error(e);
+  }
+  setTimeout(()=>btn.classList.remove('spin'), 500);
+}
+
+// ══════════════════════════════════════════════════════
+//  CLIENTES
+// ══════════════════════════════════════════════════════
+function estado(v) {
+  if (!v) return 'activo';
+  const hoy = new Date(); hoy.setHours(0,0,0,0);
+  const d   = new Date(v.includes('T') ? v : v+'T12:00:00');
+  const diff= Math.ceil((d-hoy)/86400000);
+  if (diff<0) return 'vencido';
+  if (diff<=5) return 'proximo';
+  return 'activo';
+}
+
+function fmtDate(v) {
+  if (!v) return '—';
+  return new Date(v.includes('T') ? v : v+'T12:00:00')
+    .toLocaleDateString('es-AR',{day:'2-digit',month:'2-digit',year:'numeric'});
+}
+
+function setTab(t) {
+  currentTab = t;
+  ['Activos','Proximos','Vencidos'].forEach(x=>{
+    document.getElementById('t'+x).classList.toggle('active', t===x.toLowerCase());
+  });
+  renderClientes();
+}
+
+function renderClientes() {
+  const q = (document.getElementById('searchQ').value||'').toLowerCase();
+  const counts = { activos:0, proximos:0, vencidos:0 };
+  clientes.forEach(c=>{ const e=estado(c.vencimiento); counts[e==='proximo'?'proximos':e+'s']++; });
+  // Fix key names
+  const mapKey = { activos:'activos', proximos:'proximos', vencidos:'vencidos' };
+  document.getElementById('cActivos').textContent  = clientes.filter(c=>estado(c.vencimiento)==='activo').length;
+  document.getElementById('cProximos').textContent = clientes.filter(c=>estado(c.vencimiento)==='proximo').length;
+  document.getElementById('cVencidos').textContent = clientes.filter(c=>estado(c.vencimiento)==='vencido').length;
+
+  const tabMap = { activos:'activo', proximos:'proximo', vencidos:'vencido' };
+  const filtered = clientes.filter(c=>{
+    const match = !q || [c.nombre,c.telefono,c.correo].some(f=>(f||'').toLowerCase().includes(q));
+    return match && estado(c.vencimiento)===tabMap[currentTab];
+  });
+
+  const el = document.getElementById('clientesList');
+  if (!filtered.length) {
+    const ico = currentTab==='activos'?'✅':currentTab==='proximos'?'⏰':'⛔';
+    el.innerHTML=`<div class="empty"><div class="empty-ico">${ico}</div><div class="empty-t">Sin clientes aquí</div><div class="empty-s">Usá el botón + para agregar</div></div>`;
+    return;
+  }
+
+  el.innerHTML = filtered.map(c=>{
+    const e = estado(c.vencimiento);
+    const bCls = e==='vencido'?'badge-vencido':e==='proximo'?'badge-proximo':'badge-activo';
+    const bLbl = e==='vencido'?'⛔ VENCIDO':e==='proximo'?'⏰ POR VENCER':'✅ ACTIVO';
+    return `<div class="card ${e}">
+      <span class="card-badge ${bCls}">${bLbl}</span>
+      <div class="card-top">
+        <div>
+          <div class="card-name">${c.nombre||'—'}</div>
+          <div class="card-svc">${c.servicio||''}</div>
+        </div>
+        <div class="card-id">${(c.id||'').slice(0,10)}</div>
+      </div>
+      <div class="card-grid">
+        <div class="cf"><div class="cf-label">📱 Teléfono</div><div class="cf-val">${c.telefono||'—'}</div></div>
+        <div class="cf"><div class="cf-label">📧 Correo</div><div class="cf-val">${c.correo||'—'}</div></div>
+        <div class="cf"><div class="cf-label">🔑 Contraseña</div><div class="cf-val">${c.contrasena||'—'}</div></div>
+        <div class="cf"><div class="cf-label">👤 Perfil</div><div class="cf-val">${c.perfil||'—'}</div></div>
+        <div class="cf"><div class="cf-label">🔢 PIN</div><div class="cf-val">${c.pin||'—'}</div></div>
+        <div class="cf"><div class="cf-label">📅 Vencimiento</div><div class="cf-val">${fmtDate(c.vencimiento)}</div></div>
+      </div>
+      <div class="card-actions">
+        <button class="cbtn renovar" onclick="renovar('${c.id}')">🔄 Renovar 1 mes</button>
+        <button class="cbtn wa" onclick="enviarWA('${c.id}')">💬 WhatsApp</button>
+        <button class="cbtn edit" onclick="editCliente('${c.id}')">✏️ Editar</button>
+        <button class="cbtn del" onclick="eliminarCliente('${c.id}')">🗑️ Eliminar</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+async function saveCliente() {
+  const id = document.getElementById('editId').value;
+  const d = {
+    servicio: document.getElementById('fSvc').value,
+    nombre:   document.getElementById('fNombre').value.trim(),
+    telefono: document.getElementById('fTel').value.trim(),
+    correo:   document.getElementById('fCorreo').value.trim(),
+    contrasena: document.getElementById('fPass').value.trim(),
+    perfil:   document.getElementById('fPerfil').value.trim(),
+    pin:      document.getElementById('fPin').value.trim(),
+    vencimiento: document.getElementById('fVenc').value,
+  };
+  if (!d.nombre) { toast('⚠️ El nombre es obligatorio'); return; }
+  try {
+    if (id) { await db().updateCliente({ id, ...d }); toast('✅ Cliente actualizado'); }
+    else    { await db().addCliente(d); toast('✅ Cliente agregado'); }
+    closeModal('mCliente');
+    await reloadAll();
+  } catch(e) { toast('❌ ' + e.message); }
+}
+
+async function renovar(id) {
+  try { await db().renovarCliente(id); toast('🔄 Renovado +1 mes'); await reloadAll(); }
+  catch(e) { toast('❌ '+e.message); }
+}
+
+async function eliminarCliente(id) {
+  if (!confirm('¿Eliminar este cliente?')) return;
+  try { await db().deleteCliente(id); toast('🗑️ Eliminado'); await reloadAll(); }
+  catch(e) { toast('❌ '+e.message); }
+}
+
+function editCliente(id) {
+  const c = clientes.find(c=>c.id===id||c.id==id);
+  if (!c) return;
+  document.getElementById('editId').value    = c.id;
+  document.getElementById('fSvc').value      = c.servicio||'Netflix';
+  document.getElementById('fNombre').value   = c.nombre||'';
+  document.getElementById('fTel').value      = c.telefono||'';
+  document.getElementById('fCorreo').value   = c.correo||'';
+  document.getElementById('fPass').value     = c.contrasena||'';
+  document.getElementById('fPerfil').value   = c.perfil||'';
+  document.getElementById('fPin').value      = c.pin||'';
+  document.getElementById('fVenc').value     = c.vencimiento||'';
+  document.getElementById('extText').value   = '';
+  document.getElementById('mClienteTitle').textContent = 'Editar Cliente';
+  openModal('mCliente');
+}
+
+function enviarWA(id) {
+  const c = clientes.find(c=>c.id===id||c.id==id);
+  if (!c||!c.telefono) { toast('⚠️ Sin número de WhatsApp'); return; }
+  const e = estado(c.vencimiento);
+  const eLbl = e==='vencido'?'⛔ VENCIDO':e==='proximo'?'⏰ Próximo a vencer':'✅ Activo';
+  const msg = `Hola ${c.nombre||'cliente'}! 👋\n\n📺 *Servicio:* ${c.servicio||'—'}\n📧 *Correo:* ${c.correo||'—'}\n🔑 *Contraseña:* ${c.contrasena||'—'}\n👤 *Perfil:* ${c.perfil||'—'}\n🔢 *PIN:* ${c.pin||'—'}\n📅 *Vencimiento:* ${fmtDate(c.vencimiento)}\n📌 *Estado:* ${eLbl}\n\n¡Gracias por confiar en MISAKROOS! 🚀`;
+  window.open(`https://wa.me/${c.telefono.replace(/\D/g,'')}?text=${encodeURIComponent(msg)}`,'_blank');
+}
+
+// ══════════════════════════════════════════════════════
+//  CUENTAS
+// ══════════════════════════════════════════════════════
+function renderCuentas() {
+  const el = document.getElementById('cuentasList');
+  if (!cuentas.length) {
+    el.innerHTML=`<div class="empty"><div class="empty-ico">📺</div><div class="empty-t">Sin cuentas</div><div class="empty-s">Agregá una cuenta de Netflix</div></div>`;
+    return;
+  }
+  el.innerHTML = cuentas.map((c,i)=>{
+    const perfs = c.perfiles||[];
+    const asigCnt = perfs.filter(p=>p.asignado).length;
+    return `<div class="cuenta-card">
+      <div class="cuenta-hdr">
+        <div class="cuenta-hdr-title">📺 Cuenta #${i+1}</div>
+        <div class="cuenta-id-badge">${(c.id||'').slice(0,12)}</div>
+      </div>
+      <div class="cuenta-body">
+        <div class="cuenta-info">
+          <div class="cf"><div class="cf-label">📧 Correo</div><div class="cf-val">${c.correo||'—'}</div></div>
+          <div class="cf"><div class="cf-label">🔑 Contraseña</div><div class="cf-val">${c.contrasena||'—'}</div></div>
+          <div class="cf"><div class="cf-label">📅 Renovación</div><div class="cf-val">${fmtDate(c.vencimiento)}</div></div>
+          <div class="cf"><div class="cf-label">👥 Asignados</div><div class="cf-val">${asigCnt}/${perfs.length}</div></div>
+        </div>
+        <div class="perfs-title">PERFILES</div>
+        ${perfs.map(p=>`<div class="perfil-row">
+          <div class="pnum ${p.asignado?'asig':''}">${p.numero}</div>
+          <div class="pinfo">
+            <div class="ppin">PIN: ${p.pin||'—'}</div>
+            <div class="pwa ${p.asignado?'':'libre'}">${p.asignado?(p.clienteWA||'Sin WA')+(p.vencimiento?' · 📅 '+fmtDate(p.vencimiento):''):'Sin asignar'}</div>
+          </div>
+          <button class="btn-asig ${p.asignado?'asig':'libre'}"
+            onclick="${p.asignado?`liberarPerfil('${p.id}')`:`abrirAsignar('${p.id}')`}">
+            ${p.asignado?'Reasignar':'Asignar'}
+          </button>
+        </div>`).join('')}
+      </div>
+      <div class="cuenta-actions">
+        <button class="cbtn edit" style="flex:1" onclick="editCuenta('${c.id}')">✏️ Editar</button>
+        <button class="cbtn del" style="flex:1" onclick="eliminarCuenta('${c.id}')">🗑️ Eliminar</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function buildPfForm() {
+  document.getElementById('pfForm').innerHTML = Array.from({length:5},(_,i)=>`
+    <div class="pf-row">
+      <div class="pf-label">${i+1}</div>
+      <input type="text" class="fi" id="pfN${i}" placeholder="Nombre perfil ${i+1}">
+      <input type="text" class="fi" id="pfP${i}" placeholder="PIN">
+    </div>`).join('');
+}
+
+function openModalCuenta() {
+  document.getElementById('editCuentaId').value='';
+  document.getElementById('cCorreo').value='';
+  document.getElementById('cPass').value='';
+  document.getElementById('cVenc').value='';
+  buildPfForm();
+  openModal('mCuenta');
+}
+
+async function saveCuenta() {
+  const id = document.getElementById('editCuentaId').value;
+  const d  = { correo:document.getElementById('cCorreo').value.trim(), contrasena:document.getElementById('cPass').value.trim(), vencimiento:document.getElementById('cVenc').value };
+  const perfs = Array.from({length:5},(_,i)=>({ nombre:document.getElementById('pfN'+i)?.value||'', pin:document.getElementById('pfP'+i)?.value||'' }));
+  try {
+    await db().addCuenta(d, perfs);
+    toast('✅ Cuenta guardada');
+    closeModal('mCuenta');
+    await reloadAll();
+  } catch(e) { toast('❌ '+e.message); }
+}
+
+function editCuenta(id) {
+  const c = cuentas.find(c=>c.id===id||c.id==id);
+  if (!c) return;
+  document.getElementById('editCuentaId').value = c.id;
+  document.getElementById('cCorreo').value = c.correo||'';
+  document.getElementById('cPass').value   = c.contrasena||'';
+  document.getElementById('cVenc').value   = c.vencimiento||'';
+  buildPfForm();
+  openModal('mCuenta');
+}
+
+async function eliminarCuenta(id) {
+  if (!confirm('¿Eliminar esta cuenta y todos sus perfiles?')) return;
+  try { await db().deleteCuenta(id); toast('🗑️ Cuenta eliminada'); await reloadAll(); }
+  catch(e) { toast('❌ '+e.message); }
+}
+
+function abrirAsignar(id) {
+  document.getElementById('asigId').value='';
+  document.getElementById('asigWA').value='';
+  document.getElementById('asigVenc').value='';
+  document.getElementById('asigId').value=id;
+  openModal('mAsignar');
+}
+
+async function confirmarAsignar() {
+  const id   = document.getElementById('asigId').value;
+  const wa   = document.getElementById('asigWA').value.trim();
+  const venc = document.getElementById('asigVenc').value;
+  try {
+    await db().asignarPerfil(id, wa, venc);
+    toast('✅ Perfil asignado');
+    closeModal('mAsignar');
+    await reloadAll();
+  } catch(e) { toast('❌ '+e.message); }
+}
+
+async function liberarPerfil(id) {
+  if (!confirm('¿Liberar este perfil?')) return;
+  try { await db().liberarPerfil(id); toast('🔓 Perfil liberado'); await reloadAll(); }
+  catch(e) { toast('❌ '+e.message); }
+}
+
+// ══════════════════════════════════════════════════════
+//  EXTRACTOR IA
+// ══════════════════════════════════════════════════════
+async function extractarDatos() {
+  const text = document.getElementById('extText').value.trim();
+  if (!text) { toast('⚠️ Pegá el texto primero'); return; }
+  const btn = document.getElementById('btnExtract');
+  btn.innerHTML='<span class="spin-ico"></span> Extrayendo...';
+  btn.disabled=true;
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        model:'claude-sonnet-4-20250514',
+        max_tokens:500,
+        system:`Sos un extractor de datos de clientes de streaming. Del texto que te den, extraé EXACTAMENTE estos campos y respondé SOLO con JSON válido sin texto ni backticks:
+{"servicio":"","nombre":"","telefono":"solo dígitos con código de país","correo":"","contrasena":"","perfil":"","pin":"","vencimiento":"YYYY-MM-DD"}
+Si un campo no existe dejalo como string vacío.`,
+        messages:[{role:'user',content:text}]
+      })
+    });
+    const data = await res.json();
+    const raw  = data.content?.[0]?.text||'{}';
+    const ext  = JSON.parse(raw.replace(/```json|```/g,'').trim());
+    if(ext.servicio) document.getElementById('fSvc').value=ext.servicio;
+    if(ext.nombre)   document.getElementById('fNombre').value=ext.nombre;
+    if(ext.telefono) document.getElementById('fTel').value=ext.telefono;
+    if(ext.correo)   document.getElementById('fCorreo').value=ext.correo;
+    if(ext.contrasena) document.getElementById('fPass').value=ext.contrasena;
+    if(ext.perfil)   document.getElementById('fPerfil').value=ext.perfil;
+    if(ext.pin)      document.getElementById('fPin').value=ext.pin;
+    if(ext.vencimiento) document.getElementById('fVenc').value=ext.vencimiento;
+    toast('✨ ¡Datos extraídos!');
+  } catch(e) { toast('❌ Error al extraer'); console.error(e); }
+  finally { btn.innerHTML='✨ Extraer datos automáticamente'; btn.disabled=false; }
+}
+
+// ══════════════════════════════════════════════════════
+//  MODALS & UTILS
+// ══════════════════════════════════════════════════════
+function openModalCliente() {
+  document.getElementById('editId').value='';
+  document.getElementById('mClienteTitle').textContent='Nuevo Cliente';
+  ['fSvc','fNombre','fTel','fCorreo','fPass','fPerfil','fPin','fVenc'].forEach(id=>{
+    const el=document.getElementById(id); if(el) el.value=id==='fSvc'?'Netflix':'';
+  });
+  document.getElementById('extText').value='';
+  openModal('mCliente');
+}
+function openModal(id) { document.getElementById(id).classList.add('open'); }
+function closeModal(id){ document.getElementById(id).classList.remove('open'); }
+document.querySelectorAll('.overlay').forEach(o=>o.addEventListener('click',e=>{ if(e.target===o) o.classList.remove('open'); }));
+
+let _tt;
+function toast(msg) {
+  const el=document.getElementById('toast');
+  el.textContent=msg; el.classList.add('show');
+  clearTimeout(_tt); _tt=setTimeout(()=>el.classList.remove('show'),2600);
+}
+
+// ══════════════════════════════════════════════════════
+//  START
+// ══════════════════════════════════════════════════════
+showView('clientes');
+init();
+</script>
 </body>
 </html>
